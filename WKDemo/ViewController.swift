@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import WebKit
+@preconcurrency import WebKit
 
 class ViewController: UIViewController {
     @IBOutlet weak var urlBarForm: UIView!
@@ -217,11 +217,9 @@ extension ViewController: UITextFieldDelegate {
         guard let text = textField.text?.trimmingCharacters(in: .whitespaces) else {
             return true
         }
-        if text.isEmpty {
-            self.webView.load(URLRequest(url: URL(string: "https://www.google.com")!))
-        } else {
-            self.webView.load(URLRequest(url: URL(string: text)!))
-        }
+        // http, https以外テキストが入力された時は、そのテキストの検索結果を出してもいいかも？
+        let request = text.isEmpty ? URLRequest(url: URL(string: "https://www.google.com")!) : URLRequest(url: URL(string: text)!)
+        self.webView.load(request)
         return true
     }
 }
