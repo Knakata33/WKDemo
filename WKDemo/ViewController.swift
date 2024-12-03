@@ -34,6 +34,7 @@ class ViewController: UIViewController {
         self.setNeedsStatusBarAppearanceUpdate()
         
         urlTextField.delegate = self
+        urlTextField.keyboardType = .URL
         urlBarForm.layer.cornerRadius = 6
         
         let configuration = WKWebViewConfiguration()
