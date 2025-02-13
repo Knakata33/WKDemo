@@ -66,6 +66,9 @@ class ViewController: UIViewController {
     }
     
     @IBAction func reloadButtonTouchUpInside(_ sender: Any) {
+        if self.webView.url == nil {
+            return
+        }
         self.webView.reload()
     }
 }
