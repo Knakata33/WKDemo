@@ -209,6 +209,14 @@ extension ViewController: WKUIDelegate {
         }
         return nil
     }
+    
+    func webView(
+        _ webView: WKWebView,
+        contextMenuConfigurationFor elementInfo: WKContextMenuElementInfo
+    ) async -> UIContextMenuConfiguration? {
+        // リンクでコンテキストメニューを表示しないために空のUIContextMenuConfigurationを渡しています
+        return UIContextMenuConfiguration()
+    }
 }
 
 extension ViewController: UIGestureRecognizerDelegate {
