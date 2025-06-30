@@ -182,14 +182,8 @@ extension ViewController: WKNavigationDelegate {
         }
     }
     
-    @available(iOS 13.0, *)
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
-        
-        // iOS 13からはwebView(_:decidePolicyFor:decisionHandler:)の代わりにこちらが呼ばれます
-        // （preferencesをここで変更すれば、サイト毎にmobileとdesktopを切り替えることもここでできます。今は初期化時に設定しているdefaultWebpagePreferencesに従います）
-        
-        debugPrint("WKDemo decidePolicy url: \(String(describing: navigationAction.request.url)), preferredContentMode: \(preferences.preferredContentMode.rawValue)")
-        
+        debugPrint("ViewController decidePolicy url: \(String(describing: navigationAction.request.url)), preferredContentMode: \(preferences.preferredContentMode.rawValue)")        
         decidePolicy(for: navigationAction) { (policy) in
             decisionHandler(policy, preferences)
         }
