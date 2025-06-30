@@ -176,15 +176,14 @@ extension ViewController: WKNavigationDelegate {
         
         UIApplication.shared.open(url) { (success) in
             if !success {
-                debugPrint("ViewController openURL failed url: \(url)")
+                debugPrint("WKDemo openURL failed url: \(url)")
             }
             decisionHandler(.cancel)
         }
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
-        debugPrint("ViewController decidePolicy url: \(String(describing: navigationAction.request.url)), preferredContentMode: \(preferences.preferredContentMode.rawValue)")
-        
+        debugPrint("ViewController decidePolicy url: \(String(describing: navigationAction.request.url)), preferredContentMode: \(preferences.preferredContentMode.rawValue)")        
         decidePolicy(for: navigationAction) { (policy) in
             decisionHandler(policy, preferences)
         }
