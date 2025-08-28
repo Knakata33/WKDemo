@@ -84,7 +84,8 @@ extension ViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.reloadButton.setImage(UIImage(named: "Reload.png"), for: .normal)
-        
+        let pageZoom = webView.bounds.size.width / webView.scrollView.contentSize.width
+        webView.pageZoom = pageZoom
         guard let currentUrl = webView.url else {
             return
         }
