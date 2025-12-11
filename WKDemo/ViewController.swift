@@ -38,10 +38,12 @@ class ViewController: UIViewController {
         urlBarForm.layer.cornerRadius = 6
         
         let configuration = WKWebViewConfiguration()
+        if #available(iOS 18.0, *) {
+            configuration.writingToolsBehavior = .none
+        }
         configuration.websiteDataStore = .nonPersistent()
         configuration.applicationNameForUserAgent = "Version/13.0 Safari/605.1.15"
         configuration.allowsInlineMediaPlayback = true
-        // 指定するTypeがaudioだとゲームモードのBGMが再生されなかったため、全メディアを許容
         configuration.mediaTypesRequiringUserActionForPlayback = []
         let webView = WKWebView(frame: self.containerView.bounds, configuration: configuration)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
