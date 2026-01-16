@@ -7,12 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14444DF22F1A37A000314D25 /* StarPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14444DF12F1A37A000314D25 /* StarPageView.swift */; };
 		14BBE136257E275100ED11A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBE135257E275100ED11A2 /* AppDelegate.swift */; };
 		14BBE138257E275100ED11A2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBE137257E275100ED11A2 /* SceneDelegate.swift */; };
-		14BBE13A257E275100ED11A2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBE139257E275100ED11A2 /* ViewController.swift */; };
+		14BBE13A257E275100ED11A2 /* ContentPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBE139257E275100ED11A2 /* ContentPageViewController.swift */; };
 		14BBE13F257E275300ED11A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14BBE13E257E275300ED11A2 /* Assets.xcassets */; };
 		14BBE142257E275300ED11A2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 14BBE140257E275300ED11A2 /* LaunchScreen.storyboard */; };
-		14BBE14C257E2ADD00ED11A2 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14BBE14B257E2ADD00ED11A2 /* ViewController.xib */; };
+		14BBE14C257E2ADD00ED11A2 /* ContentPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 14BBE14B257E2ADD00ED11A2 /* ContentPageViewController.xib */; };
 		14CE84A3257F6E1800A370CF /* MIMETypeSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CE84A2257F6E1800A370CF /* MIMETypeSupport.swift */; };
 		14CE84A6257F6E3C00A370CF /* DataURLSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CE84A5257F6E3C00A370CF /* DataURLSupport.swift */; };
 		14CE84A9257F6EA200A370CF /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CE84A8257F6EA200A370CF /* Files.swift */; };
@@ -30,14 +31,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		14444DF12F1A37A000314D25 /* StarPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarPageView.swift; sourceTree = "<group>"; };
 		14BBE132257E275100ED11A2 /* WKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14BBE135257E275100ED11A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		14BBE137257E275100ED11A2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		14BBE139257E275100ED11A2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		14BBE139257E275100ED11A2 /* ContentPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPageViewController.swift; sourceTree = "<group>"; };
 		14BBE13E257E275300ED11A2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		14BBE141257E275300ED11A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		14BBE143257E275300ED11A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		14BBE14B257E2ADD00ED11A2 /* ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
+		14BBE14B257E2ADD00ED11A2 /* ContentPageViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContentPageViewController.xib; sourceTree = "<group>"; };
 		14CE84A2257F6E1800A370CF /* MIMETypeSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIMETypeSupport.swift; sourceTree = "<group>"; };
 		14CE84A5257F6E3C00A370CF /* DataURLSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataURLSupport.swift; sourceTree = "<group>"; };
 		14CE84A8257F6EA200A370CF /* Files.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Files.swift; sourceTree = "<group>"; };
@@ -87,8 +89,8 @@
 				14CE84C8257F88CA00A370CF /* Images */,
 				14BBE135257E275100ED11A2 /* AppDelegate.swift */,
 				14BBE137257E275100ED11A2 /* SceneDelegate.swift */,
-				14BBE139257E275100ED11A2 /* ViewController.swift */,
-				14BBE14B257E2ADD00ED11A2 /* ViewController.xib */,
+				14BBE139257E275100ED11A2 /* ContentPageViewController.swift */,
+				14BBE14B257E2ADD00ED11A2 /* ContentPageViewController.xib */,
 				14BBE13E257E275300ED11A2 /* Assets.xcassets */,
 				14BBE140257E275300ED11A2 /* LaunchScreen.storyboard */,
 				14BBE143257E275300ED11A2 /* Info.plist */,
@@ -102,6 +104,7 @@
 				14CE84B7257F749700A370CF /* Array+Util.swift */,
 				14CE84BA257F74D600A370CF /* UIPopoverPresentationController+Compat.swift */,
 				14CE84D3257FC7DF00A370CF /* URLField.swift */,
+				14444DF12F1A37A000314D25 /* StarPageView.swift */,
 			);
 			path = WKDemo;
 			sourceTree = "<group>";
@@ -177,7 +180,7 @@
 				14CE84CB257F890500A370CF /* Reload.png in Resources */,
 				14CE84D0257F8A8300A370CF /* ReloadCancel@2x.png in Resources */,
 				14BBE142257E275300ED11A2 /* LaunchScreen.storyboard in Resources */,
-				14BBE14C257E2ADD00ED11A2 /* ViewController.xib in Resources */,
+				14BBE14C257E2ADD00ED11A2 /* ContentPageViewController.xib in Resources */,
 				14CE84D1257F8A8300A370CF /* ReloadCancel.png in Resources */,
 				14BBE13F257E275300ED11A2 /* Assets.xcassets in Resources */,
 				14CE84CC257F890500A370CF /* Reload@2x.png in Resources */,
@@ -191,7 +194,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14BBE13A257E275100ED11A2 /* ViewController.swift in Sources */,
+				14BBE13A257E275100ED11A2 /* ContentPageViewController.swift in Sources */,
 				14CE84A6257F6E3C00A370CF /* DataURLSupport.swift in Sources */,
 				14BBE136257E275100ED11A2 /* AppDelegate.swift in Sources */,
 				14CE84B8257F749700A370CF /* Array+Util.swift in Sources */,
@@ -204,6 +207,7 @@
 				14CE84B5257F740E00A370CF /* UIActivity+CompletionMessage.swift in Sources */,
 				14CE84AF257F706C00A370CF /* FileManager+Support.swift in Sources */,
 				14CE84BB257F74D600A370CF /* UIPopoverPresentationController+Compat.swift in Sources */,
+				14444DF22F1A37A000314D25 /* StarPageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

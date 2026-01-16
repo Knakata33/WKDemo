@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ContentPageViewController" customModule="WKDemo" customModuleProvider="target">
+            <connections>
+                <outlet property="containerView" destination="VDI-8s-Isy" id="Rme-Jp-vtk"/>
+                <outlet property="view" destination="iN0-l3-epB" id="SMC-0Y-5my"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VDI-8s-Isy" userLabel="Container View">
+                    <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" red="0.06370530277" green="0.14225628970000001" blue="0.29805552959999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <constraints>
+                <constraint firstItem="VDI-8s-Isy" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="3Ly-Tf-7e9"/>
+                <constraint firstItem="VDI-8s-Isy" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="Cda-ax-S1Z"/>
+                <constraint firstItem="VDI-8s-Isy" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="DLs-dv-tzD"/>
+                <constraint firstAttribute="top" secondItem="VDI-8s-Isy" secondAttribute="top" id="J0B-lS-jl7"/>
+                <constraint firstItem="VDI-8s-Isy" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="KnB-lY-yvg"/>
+                <constraint firstItem="VDI-8s-Isy" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="QPh-TM-lOR"/>
+                <constraint firstItem="VDI-8s-Isy" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="SGm-Ew-7QZ"/>
+                <constraint firstAttribute="leading" secondItem="VDI-8s-Isy" secondAttribute="leading" id="ZZD-4g-Avk"/>
+            </constraints>
+            <point key="canvasLocation" x="-39.252336448598129" y="108.85529157667388"/>
+        </view>
+    </objects>
+</document>
