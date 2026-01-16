@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ContentPageViewController.swift
 //  WKDemo
 //
 //  Created by nakata on 2020/12/07.
@@ -8,18 +8,15 @@
 import UIKit
 @preconcurrency import WebKit
 
-class ViewController: UIViewController {
-    @IBOutlet weak var urlBarForm: UIView!
-    @IBOutlet weak var urlTextField: UITextField!
+class ContentPageViewController: UIViewController {
     @IBOutlet weak var containerView: WKWebView!
-    @IBOutlet weak var reloadButton: UIButton!
-    
     private weak var webView: WKWebView!
-    private(set) var url: URL? = nil
     private var touchLocation: CGPoint = .zero
+    private let url: URL
     
-    init() {
-        super.init(nibName: "ViewController", bundle: nil)
+    init(url: URL) {
+        self.url = url
+        super.init(nibName: "ContentPageViewController", bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -33,10 +30,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         self.setNeedsStatusBarAppearanceUpdate()
         
-        urlTextField.delegate = self
-        urlTextField.keyboardType = .URL
-        urlBarForm.layer.cornerRadius = 6
-        
         let configuration = WKWebViewConfiguration()
         if #available(iOS 18.0, *) {
             configuration.writingToolsBehavior = .none
@@ -48,7 +41,6 @@ class ViewController: UIViewController {
         let webView = WKWebView(frame: self.containerView.bounds, configuration: configuration)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
-        webView.scrollView.alwaysBounceVertical = false
         webView.allowsBackForwardNavigationGestures = true
         // tapRecognizerは、webView上のタッチ位置を取得するためだけに使用しています
         // そのためtapAction自体も呼ばれないよう、gestureRecognizer(_:shouldReceive)にて制御しています
@@ -59,8 +51,7 @@ class ViewController: UIViewController {
         
         self.webView = webView
         self.containerView.addSubview(webView)
-        // Demo用
-        self.webView.load(URLRequest(url: URL(string: "https://www.google.com")!))
+        self.webView.load(URLRequest(url: self.url))
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -75,23 +66,10 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        self.reloadButton.setImage(UIImage(named: "ReloadCancel.png"), for: .normal)
-        guard let currentUrl = webView.url else {
-            return
-        }
-        self.urlTextField?.text = currentUrl.absoluteString
-    }
-    
+extension ContentPageViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        self.reloadButton.setImage(UIImage(named: "Reload.png"), for: .normal)
         let pageZoom = webView.bounds.size.width / webView.scrollView.contentSize.width
         webView.pageZoom = pageZoom
-        guard let currentUrl = webView.url else {
-            return
-        }
-        self.urlTextField?.text = currentUrl.absoluteString
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
@@ -193,7 +171,7 @@ extension ViewController: WKNavigationDelegate {
     }
 }
 
-extension ViewController: WKUIDelegate {
+extension ContentPageViewController: WKUIDelegate {
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         // target="_blank"を同じWKWebViewで開く場合に必要な対応
         if navigationAction.targetFrame?.isMainFrame != true {
@@ -211,14 +189,14 @@ extension ViewController: WKUIDelegate {
     }
 }
 
-extension ViewController: UIGestureRecognizerDelegate {
+extension ContentPageViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         self.touchLocation = touch.location(in: self.containerView)
         return false
     }
 }
 
-extension ViewController: UITextFieldDelegate {
+extension ContentPageViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let text = textField.text?.trimmingCharacters(in: .whitespaces) else {
             return true
