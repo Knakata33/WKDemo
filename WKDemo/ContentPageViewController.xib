@@ -27,12 +27,8 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" red="0.06370530277" green="0.14225628970000001" blue="0.29805552959999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
             <constraints>
-                <constraint firstItem="VDI-8s-Isy" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="3Ly-Tf-7e9"/>
-                <constraint firstItem="VDI-8s-Isy" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="Cda-ax-S1Z"/>
-                <constraint firstItem="VDI-8s-Isy" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="DLs-dv-tzD"/>
                 <constraint firstAttribute="top" secondItem="VDI-8s-Isy" secondAttribute="top" id="J0B-lS-jl7"/>
                 <constraint firstItem="VDI-8s-Isy" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="KnB-lY-yvg"/>
-                <constraint firstItem="VDI-8s-Isy" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="QPh-TM-lOR"/>
                 <constraint firstItem="VDI-8s-Isy" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="SGm-Ew-7QZ"/>
                 <constraint firstAttribute="leading" secondItem="VDI-8s-Isy" secondAttribute="leading" id="ZZD-4g-Avk"/>
             </constraints>
