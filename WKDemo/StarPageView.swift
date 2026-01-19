@@ -64,7 +64,7 @@ struct StartPageView: View {
                     )
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.gray.opacity(0.4)) // ← 薄い枠線
+                            .stroke(Color.gray.opacity(0.4))
                     )
                 }
                 .padding(.horizontal, horizontalMargin)
@@ -72,9 +72,14 @@ struct StartPageView: View {
                 Spacer()
             }
         }
-        // フルスクリーン表示（sheetをフルスクリーンにしたい → fullScreenCover）
         .fullScreenCover(item: $presentingURL) { url in
-            ContentPageVCWrapper(url: url)
+            ZStack {
+                Color(red: 18.0 / 255.0,
+                      green: 38.0 / 255.0,
+                      blue: 79.0 / 255.0
+                ).ignoresSafeArea()
+                ContentPageVCWrapper(url: url).ignoresSafeArea()
+            }
         }
         // URL不正アラート
         .alert("開けませんでした", isPresented: $showInvalidURLAlert) {

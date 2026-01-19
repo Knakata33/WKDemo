@@ -41,7 +41,8 @@ class ContentPageViewController: UIViewController {
         let webView = WKWebView(frame: self.containerView.bounds, configuration: configuration)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
-        webView.allowsBackForwardNavigationGestures = true
+        webView.scrollView.alwaysBounceVertical = false
+        
         // tapRecognizerは、webView上のタッチ位置を取得するためだけに使用しています
         // そのためtapAction自体も呼ばれないよう、gestureRecognizer(_:shouldReceive)にて制御しています
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
@@ -52,17 +53,6 @@ class ContentPageViewController: UIViewController {
         self.webView = webView
         self.containerView.addSubview(webView)
         self.webView.load(URLRequest(url: self.url))
-    }
-    
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
-    
-    @IBAction func reloadButtonTouchUpInside(_ sender: Any) {
-        if self.webView.url == nil {
-            return
-        }
-        self.webView.reload()
     }
 }
 
@@ -193,17 +183,5 @@ extension ContentPageViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         self.touchLocation = touch.location(in: self.containerView)
         return false
-    }
-}
-
-extension ContentPageViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        guard let text = textField.text?.trimmingCharacters(in: .whitespaces) else {
-            return true
-        }
-        // http, https以外テキストが入力された時は、そのテキストの検索結果を出してもいいかも？
-        let request = text.isEmpty ? URLRequest(url: URL(string: "https://www.google.com")!) : URLRequest(url: URL(string: text)!)
-        self.webView.load(request)
-        return true
     }
 }
