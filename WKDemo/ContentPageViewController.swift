@@ -10,6 +10,8 @@ import UIKit
 
 class ContentPageViewController: UIViewController {
     @IBOutlet weak var containerView: WKWebView!
+    @IBOutlet weak var closeButton: UIButton!
+    
     private weak var webView: WKWebView!
     private var touchLocation: CGPoint = .zero
     private let url: URL
@@ -29,6 +31,12 @@ class ContentPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setNeedsStatusBarAppearanceUpdate()
+        
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "xmark.circle")
+        config.preferredSymbolConfigurationForImage =
+            UIImage.SymbolConfiguration(pointSize: 32, weight: .semibold)
+        closeButton.configuration = config
         
         let configuration = WKWebViewConfiguration()
         if #available(iOS 18.0, *) {
@@ -54,6 +62,11 @@ class ContentPageViewController: UIViewController {
         self.containerView.addSubview(webView)
         self.webView.load(URLRequest(url: self.url))
     }
+    
+    @IBAction func closeButtonTouchUpInside(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
 }
 
 extension ContentPageViewController: WKNavigationDelegate {
