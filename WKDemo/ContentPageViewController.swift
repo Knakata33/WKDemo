@@ -35,7 +35,7 @@ class ContentPageViewController: UIViewController {
         var config = UIButton.Configuration.plain()
         config.image = UIImage(systemName: "xmark.circle")
         config.preferredSymbolConfigurationForImage =
-            UIImage.SymbolConfiguration(pointSize: 32, weight: .semibold)
+        UIImage.SymbolConfiguration(pointSize: 32, weight: .semibold)
         closeButton.configuration = config
         
         let configuration = WKWebViewConfiguration()
@@ -43,14 +43,12 @@ class ContentPageViewController: UIViewController {
             configuration.writingToolsBehavior = .none
         }
         configuration.websiteDataStore = .nonPersistent()
-        configuration.applicationNameForUserAgent = "Version/13.0 Safari/605.1.15"
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
         let webView = WKWebView(frame: self.containerView.bounds, configuration: configuration)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
         webView.scrollView.alwaysBounceVertical = false
-        webView.scrollView.contentInsetAdjustmentBehavior = .never
         
         // tapRecognizerは、webView上のタッチ位置を取得するためだけに使用しています
         // そのためtapAction自体も呼ばれないよう、gestureRecognizer(_:shouldReceive)にて制御しています
