@@ -25,8 +25,19 @@
                     <rect key="frame" x="0.0" y="0.0" width="1133" height="744"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
+                <visualEffectView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="opw-Wi-3Yd" userLabel="BottomBarView">
+                    <rect key="frame" x="0.0" y="646" width="1133" height="48"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="mFS-8n-Qct">
+                        <rect key="frame" x="0.0" y="0.0" width="1133" height="48"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="48" id="rkc-1x-imN"/>
+                    </constraints>
+                    <blurEffect style="regular"/>
+                </visualEffectView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jj3-oi-fxf">
-                    <rect key="frame" x="5" y="685" width="50" height="44"/>
+                    <rect key="frame" x="5" y="650" width="50" height="44"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="aU8-R4-tSI"/>
                     </constraints>
@@ -43,6 +54,9 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" red="0.06370530277" green="0.14225628970000001" blue="0.29805552959999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
             <constraints>
+                <constraint firstItem="opw-Wi-3Yd" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="9ei-mT-Bx4"/>
+                <constraint firstAttribute="trailing" secondItem="opw-Wi-3Yd" secondAttribute="trailing" id="FLY-ub-h0y"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="opw-Wi-3Yd" secondAttribute="bottom" id="Hve-LQ-4YD"/>
                 <constraint firstAttribute="top" secondItem="VDI-8s-Isy" secondAttribute="top" id="J0B-lS-jl7"/>
                 <constraint firstItem="Jj3-oi-fxf" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="5" id="JYv-A2-50y">
                     <variation key="heightClass=compact" constant="5"/>
@@ -51,9 +65,9 @@
                 <constraint firstItem="VDI-8s-Isy" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="KnB-lY-yvg"/>
                 <constraint firstItem="VDI-8s-Isy" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="SGm-Ew-7QZ"/>
                 <constraint firstAttribute="leading" secondItem="VDI-8s-Isy" secondAttribute="leading" id="ZZD-4g-Avk"/>
-                <constraint firstAttribute="bottom" secondItem="Jj3-oi-fxf" secondAttribute="bottom" constant="15" id="zaP-qd-XNb"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Jj3-oi-fxf" secondAttribute="bottom" id="zaP-qd-XNb"/>
             </constraints>
-            <point key="canvasLocation" x="-39.252336448598129" y="108.85529157667388"/>
+            <point key="canvasLocation" x="-39.452780229479259" y="108.06451612903226"/>
         </view>
     </objects>
     <resources>
