@@ -26,17 +26,27 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <visualEffectView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="opw-Wi-3Yd" userLabel="BottomBarView">
-                    <rect key="frame" x="0.0" y="646" width="1133" height="48"/>
+                    <rect key="frame" x="396.5" y="646" width="340" height="48"/>
                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="mFS-8n-Qct">
-                        <rect key="frame" x="0.0" y="0.0" width="1133" height="48"/>
+                        <rect key="frame" x="0.0" y="0.0" width="340" height="48"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="56Y-ld-uFh" userLabel="URL Text Field">
+                                <rect key="frame" x="85" y="7" width="170" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="URL" enablesReturnKeyAutomatically="YES" textContentType="url"/>
+                            </textField>
+                        </subviews>
                     </view>
                     <constraints>
+                        <constraint firstItem="56Y-ld-uFh" firstAttribute="centerX" secondItem="opw-Wi-3Yd" secondAttribute="centerX" id="BZc-14-MbU"/>
+                        <constraint firstItem="56Y-ld-uFh" firstAttribute="centerY" secondItem="opw-Wi-3Yd" secondAttribute="centerY" id="Dop-ec-0Ko"/>
+                        <constraint firstItem="56Y-ld-uFh" firstAttribute="width" secondItem="opw-Wi-3Yd" secondAttribute="width" multiplier="0.5" id="d1T-kC-HOr"/>
                         <constraint firstAttribute="height" constant="48" id="rkc-1x-imN"/>
                     </constraints>
                     <blurEffect style="regular"/>
                 </visualEffectView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jj3-oi-fxf">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jj3-oi-fxf" userLabel="Close Button">
                     <rect key="frame" x="5" y="650" width="50" height="44"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="aU8-R4-tSI"/>
@@ -54,8 +64,6 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" red="0.06370530277" green="0.14225628970000001" blue="0.29805552959999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
             <constraints>
-                <constraint firstItem="opw-Wi-3Yd" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="9ei-mT-Bx4"/>
-                <constraint firstAttribute="trailing" secondItem="opw-Wi-3Yd" secondAttribute="trailing" id="FLY-ub-h0y"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="opw-Wi-3Yd" secondAttribute="bottom" id="Hve-LQ-4YD"/>
                 <constraint firstAttribute="top" secondItem="VDI-8s-Isy" secondAttribute="top" id="J0B-lS-jl7"/>
                 <constraint firstItem="Jj3-oi-fxf" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="5" id="JYv-A2-50y">
@@ -65,6 +73,8 @@
                 <constraint firstItem="VDI-8s-Isy" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="KnB-lY-yvg"/>
                 <constraint firstItem="VDI-8s-Isy" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="SGm-Ew-7QZ"/>
                 <constraint firstAttribute="leading" secondItem="VDI-8s-Isy" secondAttribute="leading" id="ZZD-4g-Avk"/>
+                <constraint firstItem="opw-Wi-3Yd" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="pAf-IM-6RX"/>
+                <constraint firstItem="opw-Wi-3Yd" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.3" id="xhM-45-noD"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Jj3-oi-fxf" secondAttribute="bottom" id="zaP-qd-XNb"/>
             </constraints>
             <point key="canvasLocation" x="-39.452780229479259" y="108.06451612903226"/>
