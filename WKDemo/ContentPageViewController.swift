@@ -11,6 +11,7 @@ import UIKit
 class ContentPageViewController: UIViewController {
     @IBOutlet weak var containerView: WKWebView!
     @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var reloadButton: UIButton!
     
     private weak var webView: WKWebView!
     private var touchLocation: CGPoint = .zero
@@ -64,6 +65,13 @@ class ContentPageViewController: UIViewController {
     
     @IBAction func closeButtonTouchUpInside(_ sender: Any) {
         dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func reloadButtonTouchUpInside(_ sender: Any) {
+        guard isViewLoaded else {
+            return
+        }
+        webView.reload()
     }
     
 }
