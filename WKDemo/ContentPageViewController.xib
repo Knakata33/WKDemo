@@ -13,6 +13,7 @@
             <connections>
                 <outlet property="closeButton" destination="Jj3-oi-fxf" id="lYo-O3-dzn"/>
                 <outlet property="containerView" destination="VDI-8s-Isy" id="Rme-Jp-vtk"/>
+                <outlet property="reloadButton" destination="GtT-gk-TI1" id="KFj-Xu-tVC"/>
                 <outlet property="view" destination="iN0-l3-epB" id="SMC-0Y-5my"/>
             </connections>
         </placeholder>
@@ -36,11 +37,31 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="URL" enablesReturnKeyAutomatically="YES" textContentType="url"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GtT-gk-TI1" userLabel="Reload Button">
+                                <rect key="frame" x="0.0" y="2" width="53" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="YWS-FW-zJi"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="tintColor"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="Reload.png" title="">
+                                    <color key="baseForegroundColor" systemColor="tintColor"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="closeButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="Ffu-yY-7Xj"/>
+                                    <action selector="reloadButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="GSz-bX-RGX"/>
+                                </connections>
+                            </button>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="GtT-gk-TI1" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="56Y-ld-uFh" secondAttribute="trailing" priority="999" constant="5" id="J5L-k8-apO"/>
+                        </constraints>
                     </view>
                     <constraints>
                         <constraint firstItem="56Y-ld-uFh" firstAttribute="centerX" secondItem="opw-Wi-3Yd" secondAttribute="centerX" id="BZc-14-MbU"/>
                         <constraint firstItem="56Y-ld-uFh" firstAttribute="centerY" secondItem="opw-Wi-3Yd" secondAttribute="centerY" id="Dop-ec-0Ko"/>
+                        <constraint firstItem="GtT-gk-TI1" firstAttribute="leading" secondItem="opw-Wi-3Yd" secondAttribute="leading" id="Eif-s7-XIJ"/>
+                        <constraint firstItem="GtT-gk-TI1" firstAttribute="centerY" secondItem="opw-Wi-3Yd" secondAttribute="centerY" id="NNj-Pd-vcm"/>
                         <constraint firstItem="56Y-ld-uFh" firstAttribute="width" secondItem="opw-Wi-3Yd" secondAttribute="width" multiplier="0.5" id="d1T-kC-HOr"/>
                         <constraint firstAttribute="height" constant="48" id="rkc-1x-imN"/>
                     </constraints>
@@ -81,6 +102,7 @@
         </view>
     </objects>
     <resources>
+        <image name="Reload.png" width="29" height="29"/>
         <image name="xmark.circle" catalog="system" width="128" height="123"/>
         <systemColor name="tintColor">
             <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
