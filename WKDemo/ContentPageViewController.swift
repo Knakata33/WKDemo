@@ -8,10 +8,11 @@
 import UIKit
 @preconcurrency import WebKit
 
-class ContentPageViewController: UIViewController {
+class ContentPageViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var containerView: WKWebView!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var reloadButton: UIButton!
+    @IBOutlet weak var urlTextField: UITextField!
     
     private weak var webView: WKWebView!
     private var touchLocation: CGPoint = .zero
@@ -58,9 +59,32 @@ class ContentPageViewController: UIViewController {
         tapRecognizer.numberOfTapsRequired = 1
         webView.addGestureRecognizer(tapRecognizer)
         
+        urlTextField.delegate = self
+        urlTextField.autocapitalizationType = .none
+        urlTextField.autocorrectionType = .no
+        
         self.webView = webView
         self.containerView.addSubview(webView)
         self.webView.load(URLRequest(url: self.url))
+    }
+    
+    
+    @IBAction func urlTextFieldDidEndOnExit(_ sender: UITextField) {
+        sender.resignFirstResponder()
+        
+        guard let input = sender.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines),
+              !input.isEmpty else { return }
+        
+        let urlString: String
+        if input.hasPrefix("http://") || input.hasPrefix("https://") {
+            urlString = input
+        } else {
+            urlString = "https://" + input
+        }
+        
+        guard let url = URL(string: urlString) else { return }
+        webView.load(URLRequest(url: url))
     }
     
     @IBAction func closeButtonTouchUpInside(_ sender: Any) {
