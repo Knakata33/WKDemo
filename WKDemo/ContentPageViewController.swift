@@ -60,8 +60,18 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         webView.addGestureRecognizer(tapRecognizer)
         
         urlTextField.delegate = self
-        urlTextField.autocapitalizationType = .none
-        urlTextField.autocorrectionType = .no
+        urlTextField.layer.cornerRadius = 10
+        urlTextField.clipsToBounds = true
+        
+        let searchIcon = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+        searchIcon.tintColor = .systemGray2
+        searchIcon.contentMode = .scaleAspectFit
+        searchIcon.frame = CGRect(x: 8, y: 0, width: 18, height: 18)
+        
+        let leftView = UIView(frame: CGRect(x: 0, y: 0, width: 34, height: 18))
+        leftView.addSubview(searchIcon)
+        urlTextField.leftView = leftView
+        urlTextField.leftViewMode = .always
         
         self.webView = webView
         self.containerView.addSubview(webView)
