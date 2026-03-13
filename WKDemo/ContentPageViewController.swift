@@ -11,6 +11,8 @@ import UIKit
 class ContentPageViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var containerView: WKWebView!
     @IBOutlet weak var closeButton: UIButton!
+    
+    @IBOutlet weak var bottomBarView: UIVisualEffectView!
     @IBOutlet weak var reloadButton: UIButton!
     @IBOutlet weak var urlTextField: UITextField!
     
@@ -59,8 +61,11 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         tapRecognizer.numberOfTapsRequired = 1
         webView.addGestureRecognizer(tapRecognizer)
         
+        bottomBarView.layer.cornerRadius = 20
+        bottomBarView.clipsToBounds = true
+        
         urlTextField.delegate = self
-        urlTextField.layer.cornerRadius = 10
+        urlTextField.layer.cornerRadius = 20
         urlTextField.clipsToBounds = true
         
         let searchIcon = UIImageView(image: UIImage(systemName: "magnifyingglass"))
