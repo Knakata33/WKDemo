@@ -15,6 +15,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var bottomBarView: UIVisualEffectView!
     @IBOutlet weak var reloadButton: UIButton!
     @IBOutlet weak var urlTextField: UITextField!
+    @IBOutlet weak var bottomBarCloseButton: UIButton!
     
     private weak var webView: WKWebView!
     private var touchLocation: CGPoint = .zero
@@ -113,6 +114,9 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         webView.reload()
     }
     
+    @IBAction func bottomBarCloseButtonTouchUpInside(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 extension ContentPageViewController: WKNavigationDelegate {
