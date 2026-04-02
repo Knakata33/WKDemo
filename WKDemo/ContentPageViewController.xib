@@ -13,7 +13,6 @@
             <connections>
                 <outlet property="bottomBarCloseButton" destination="F0v-ih-mTU" id="IQb-DD-k2z"/>
                 <outlet property="bottomBarView" destination="opw-Wi-3Yd" id="BB6-J5-JgD"/>
-                <outlet property="closeButton" destination="Jj3-oi-fxf" id="lYo-O3-dzn"/>
                 <outlet property="containerView" destination="VDI-8s-Isy" id="Rme-Jp-vtk"/>
                 <outlet property="reloadButton" destination="GtT-gk-TI1" id="KFj-Xu-tVC"/>
                 <outlet property="urlTextField" destination="56Y-ld-uFh" id="y3S-ce-gLz"/>
@@ -29,7 +28,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="1133" height="744"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
-                <visualEffectView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="opw-Wi-3Yd" userLabel="BottomBarView">
+                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="opw-Wi-3Yd" userLabel="BottomBarView">
                     <rect key="frame" x="226.5" y="646" width="680" height="48"/>
                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="mFS-8n-Qct">
                         <rect key="frame" x="0.0" y="0.0" width="680" height="48"/>
@@ -44,7 +43,7 @@
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GtT-gk-TI1" userLabel="Reload Button">
-                                <rect key="frame" x="0.0" y="2" width="53" height="44"/>
+                                <rect key="frame" x="5" y="2" width="53" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="YWS-FW-zJi"/>
                                 </constraints>
@@ -56,7 +55,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F0v-ih-mTU" userLabel="Close Button">
-                                <rect key="frame" x="627" y="2" width="53" height="44"/>
+                                <rect key="frame" x="622" y="2" width="53" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="K2Y-ZA-UgI"/>
                                 </constraints>
@@ -77,44 +76,25 @@
                         <constraint firstItem="F0v-ih-mTU" firstAttribute="centerY" secondItem="opw-Wi-3Yd" secondAttribute="centerY" id="9XA-s7-hI1"/>
                         <constraint firstItem="56Y-ld-uFh" firstAttribute="centerX" secondItem="opw-Wi-3Yd" secondAttribute="centerX" id="BZc-14-MbU"/>
                         <constraint firstItem="56Y-ld-uFh" firstAttribute="centerY" secondItem="opw-Wi-3Yd" secondAttribute="centerY" id="Dop-ec-0Ko"/>
-                        <constraint firstItem="GtT-gk-TI1" firstAttribute="leading" secondItem="opw-Wi-3Yd" secondAttribute="leading" id="Eif-s7-XIJ"/>
+                        <constraint firstItem="GtT-gk-TI1" firstAttribute="leading" secondItem="opw-Wi-3Yd" secondAttribute="leading" constant="5" id="Eif-s7-XIJ"/>
                         <constraint firstItem="GtT-gk-TI1" firstAttribute="centerY" secondItem="opw-Wi-3Yd" secondAttribute="centerY" id="NNj-Pd-vcm"/>
                         <constraint firstItem="56Y-ld-uFh" firstAttribute="width" secondItem="opw-Wi-3Yd" secondAttribute="width" multiplier="0.8" id="d1T-kC-HOr"/>
-                        <constraint firstAttribute="trailing" secondItem="F0v-ih-mTU" secondAttribute="trailing" id="fRq-92-l4C"/>
+                        <constraint firstAttribute="trailing" secondItem="F0v-ih-mTU" secondAttribute="trailing" constant="5" id="fRq-92-l4C"/>
                         <constraint firstAttribute="height" constant="48" id="rkc-1x-imN"/>
                     </constraints>
                     <blurEffect style="regular"/>
                 </visualEffectView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jj3-oi-fxf" userLabel="Close Button">
-                    <rect key="frame" x="5" y="650" width="50" height="44"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="44" id="aU8-R4-tSI"/>
-                    </constraints>
-                    <color key="tintColor" systemColor="tintColor"/>
-                    <state key="normal" title="Button"/>
-                    <buttonConfiguration key="configuration" style="plain" image="xmark.circle" catalog="system" title="">
-                        <color key="baseForegroundColor" systemColor="tintColor"/>
-                    </buttonConfiguration>
-                    <connections>
-                        <action selector="closeButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="kh1-2a-Neh"/>
-                    </connections>
-                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" red="0.06370530277" green="0.14225628970000001" blue="0.29805552959999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
             <constraints>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="opw-Wi-3Yd" secondAttribute="bottom" id="Hve-LQ-4YD"/>
                 <constraint firstAttribute="top" secondItem="VDI-8s-Isy" secondAttribute="top" id="J0B-lS-jl7"/>
-                <constraint firstItem="Jj3-oi-fxf" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="5" id="JYv-A2-50y">
-                    <variation key="heightClass=compact" constant="5"/>
-                    <variation key="widthClass=compact" constant="5"/>
-                </constraint>
                 <constraint firstItem="VDI-8s-Isy" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="KnB-lY-yvg"/>
                 <constraint firstItem="VDI-8s-Isy" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="SGm-Ew-7QZ"/>
                 <constraint firstAttribute="leading" secondItem="VDI-8s-Isy" secondAttribute="leading" id="ZZD-4g-Avk"/>
                 <constraint firstItem="opw-Wi-3Yd" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="pAf-IM-6RX"/>
                 <constraint firstItem="opw-Wi-3Yd" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.6" id="xhM-45-noD"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Jj3-oi-fxf" secondAttribute="bottom" id="zaP-qd-XNb"/>
             </constraints>
             <point key="canvasLocation" x="-39.452780229479259" y="108.06451612903226"/>
         </view>
@@ -122,7 +102,6 @@
     <resources>
         <image name="Reload.png" width="29" height="29"/>
         <image name="ReloadCancel.png" width="29" height="29"/>
-        <image name="xmark.circle" catalog="system" width="128" height="123"/>
         <systemColor name="tintColor">
             <color red="0.0" green="0.53333333329999999" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

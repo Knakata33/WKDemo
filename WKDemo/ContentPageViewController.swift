@@ -10,8 +10,6 @@ import UIKit
 
 class ContentPageViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var containerView: WKWebView!
-    @IBOutlet weak var closeButton: UIButton!
-    
     @IBOutlet weak var bottomBarView: UIVisualEffectView!
     @IBOutlet weak var reloadButton: UIButton!
     @IBOutlet weak var urlTextField: UITextField!
@@ -41,7 +39,6 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         config.image = UIImage(systemName: "xmark.circle")
         config.preferredSymbolConfigurationForImage =
         UIImage.SymbolConfiguration(pointSize: 32, weight: .semibold)
-        closeButton.configuration = config
         
         let configuration = WKWebViewConfiguration()
         if #available(iOS 18.0, *) {
@@ -101,10 +98,6 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         
         guard let url = URL(string: urlString) else { return }
         webView.load(URLRequest(url: url))
-    }
-    
-    @IBAction func closeButtonTouchUpInside(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func reloadButtonTouchUpInside(_ sender: Any) {
