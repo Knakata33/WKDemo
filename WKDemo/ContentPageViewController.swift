@@ -63,7 +63,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         bottomBarView.clipsToBounds = true
         
         urlTextField.delegate = self
-        urlTextField.layer.cornerRadius = 20
+        urlTextField.layer.cornerRadius = 15
         urlTextField.clipsToBounds = true
         
         let searchIcon = UIImageView(image: UIImage(systemName: "magnifyingglass"))
