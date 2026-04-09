@@ -59,11 +59,11 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         tapRecognizer.numberOfTapsRequired = 1
         webView.addGestureRecognizer(tapRecognizer)
         
-        bottomBarView.layer.cornerRadius = 20
+        bottomBarView.layer.cornerRadius = 18
         bottomBarView.clipsToBounds = true
         
         urlTextField.delegate = self
-        urlTextField.layer.cornerRadius = 15
+        urlTextField.layer.cornerRadius = 10
         urlTextField.clipsToBounds = true
         
         let searchIcon = UIImageView(image: UIImage(systemName: "magnifyingglass"))
