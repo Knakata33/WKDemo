@@ -289,3 +289,11 @@ extension ContentPageViewController: UIGestureRecognizerDelegate {
         return false
     }
 }
+
+extension ContentPageViewController {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        DispatchQueue.main.async {
+            textField.selectAll(nil)
+        }
+    }
+}
