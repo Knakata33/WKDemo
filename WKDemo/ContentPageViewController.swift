@@ -167,6 +167,9 @@ extension ContentPageViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         let pageZoom = webView.bounds.size.width / webView.scrollView.contentSize.width
         webView.pageZoom = pageZoom
+        
+        guard !urlTextField.isEditing else { return }
+        urlTextField.text = webView.url?.absoluteString
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
