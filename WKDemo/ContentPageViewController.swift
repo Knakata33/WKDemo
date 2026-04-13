@@ -50,6 +50,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         let webView = WKWebView(frame: self.containerView.bounds, configuration: configuration)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
+        webView.uiDelegate = self
         webView.scrollView.alwaysBounceVertical = false
         
         // tapRecognizerは、webView上のタッチ位置を取得するためだけに使用しています
@@ -81,6 +82,57 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         self.webView.load(URLRequest(url: self.url))
     }
     
+    private func looksLikeHost(_ text: String) -> Bool {
+        //　まず空白チェック
+        if text.contains(" ") {
+            return false
+        }
+        
+        // localhost(localhost:)は例外
+        if text == "localhost" || text.hasPrefix("localhost:") {
+            return true
+        }
+        
+        // 通常のホストを判定
+        if !text.contains(".") {
+            return false
+        }
+        
+        guard let components = URLComponents(string: "https://\(text)"),
+              let host = components.host,
+              !host.isEmpty else {
+            return false
+        }
+        
+        return true
+    }
+    
+    private func makeBrowsableURL(from input: String) -> URL? {
+        let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if trimmed.hasPrefix("http://") || trimmed.hasPrefix("https://") {
+            guard let url = URL(string: trimmed),
+                  let scheme = url.scheme,
+                  let host = url.host,
+                  !scheme.isEmpty,
+                  !host.isEmpty else {
+                return nil
+            }
+            return url
+        }
+        
+        if looksLikeHost(trimmed), let url = URL(string: "https://\(trimmed)") {
+            return url
+        }
+        
+        return nil
+    }
+    
+    private func makeGoogleSearchURL(query: String) -> URL {
+        var components = URLComponents(string: "https://www.google.com/search")!
+        components.queryItems = [URLQueryItem(name: "q", value: query)]
+        return components.url!
+    }
     
     @IBAction func urlTextFieldDidEndOnExit(_ sender: UITextField) {
         sender.resignFirstResponder()
@@ -89,14 +141,13 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
             .trimmingCharacters(in: .whitespacesAndNewlines),
               !input.isEmpty else { return }
         
-        let urlString: String
-        if input.hasPrefix("http://") || input.hasPrefix("https://") {
-            urlString = input
-        } else {
-            urlString = "https://" + input
-        }
+        let url: URL
         
-        guard let url = URL(string: urlString) else { return }
+        if let resolvedURL = makeBrowsableURL(from: input) {
+            url = resolvedURL
+        } else {
+            url = makeGoogleSearchURL(query: input)
+        }
         webView.load(URLRequest(url: url))
     }
     
@@ -116,6 +167,9 @@ extension ContentPageViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         let pageZoom = webView.bounds.size.width / webView.scrollView.contentSize.width
         webView.pageZoom = pageZoom
+        
+        guard !urlTextField.isEditing else { return }
+        urlTextField.text = webView.url?.absoluteString
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
