@@ -91,35 +91,19 @@ struct StartPageView: View {
 
     private func openFromText() {
         let raw = urlText.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        guard let url = normalizeAndValidateURL(raw) else {
-            invalidURLMessage = "入力された文字列から正しいURLを作れませんでした。\n例: https://example.com"
+        
+        guard let url = WebNavigationResolver.resolve(from: raw) else {
+            invalidURLMessage = "入力内容からページを開けませんでした。"
             showInvalidURLAlert = true
             return
         }
-
+        
         presentingURL = url
-    }
-
-    /// スキーム補完 + 最低限の妥当性チェック
-    private func normalizeAndValidateURL(_ text: String) -> URL? {
-        guard !text.isEmpty else { return nil }
-
-        var s = text
-        if !s.hasPrefix("http://") && !s.hasPrefix("https://") {
-            s = "https://" + s
-        }
-
-        guard let url = URL(string: s) else { return nil }
-        guard let scheme = url.scheme, (scheme == "http" || scheme == "https") else { return nil }
-        guard url.host != nil else { return nil }
-
-        return url
     }
 }
 
 // fullScreenCover(item:) 用
-extension URL: Identifiable {
+extension URL: @retroactive Identifiable {
     public var id: String { absoluteString }
 }
 

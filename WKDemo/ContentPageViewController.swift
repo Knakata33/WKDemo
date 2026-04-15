@@ -137,17 +137,11 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     @IBAction func urlTextFieldDidEndOnExit(_ sender: UITextField) {
         sender.resignFirstResponder()
         
-        guard let input = sender.text?
-            .trimmingCharacters(in: .whitespacesAndNewlines),
-              !input.isEmpty else { return }
-        
-        let url: URL
-        
-        if let resolvedURL = makeBrowsableURL(from: input) {
-            url = resolvedURL
-        } else {
-            url = makeGoogleSearchURL(query: input)
+        guard let input = sender.text,
+              let url = WebNavigationResolver.resolve(from: input) else {
+            return
         }
+        
         webView.load(URLRequest(url: url))
     }
     
@@ -293,5 +287,13 @@ extension ContentPageViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         self.touchLocation = touch.location(in: self.containerView)
         return false
+    }
+}
+
+extension ContentPageViewController {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        DispatchQueue.main.async {
+            textField.selectAll(nil)
+        }
     }
 }

@@ -28,6 +28,7 @@
 		14CE84D0257F8A8300A370CF /* ReloadCancel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 14CE84CE257F8A8300A370CF /* ReloadCancel@2x.png */; };
 		14CE84D1257F8A8300A370CF /* ReloadCancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 14CE84CF257F8A8300A370CF /* ReloadCancel.png */; };
 		14CE84D4257FC7DF00A370CF /* URLField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CE84D3257FC7DF00A370CF /* URLField.swift */; };
+		14DDA6652F8CF152007E46EC /* WebNavigationResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DDA6642F8CF14B007E46EC /* WebNavigationResolver.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 		14CE84CF257F8A8300A370CF /* ReloadCancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ReloadCancel.png; sourceTree = "<group>"; };
 		14CE84D3257FC7DF00A370CF /* URLField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLField.swift; sourceTree = "<group>"; };
 		14D42C4A2F32F9D3000BA513 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = .gitignore; sourceTree = "<group>"; };
+		14DDA6642F8CF14B007E46EC /* WebNavigationResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebNavigationResolver.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				14CE84BA257F74D600A370CF /* UIPopoverPresentationController+Compat.swift */,
 				14CE84D3257FC7DF00A370CF /* URLField.swift */,
 				14444DF12F1A37A000314D25 /* StarPageView.swift */,
+				14DDA6642F8CF14B007E46EC /* WebNavigationResolver.swift */,
 			);
 			path = WKDemo;
 			sourceTree = "<group>";
@@ -203,6 +206,7 @@
 				14CE84AC257F6F0B00A370CF /* AtomicBool.swift in Sources */,
 				14BBE138257E275100ED11A2 /* SceneDelegate.swift in Sources */,
 				14CE84A3257F6E1800A370CF /* MIMETypeSupport.swift in Sources */,
+				14DDA6652F8CF152007E46EC /* WebNavigationResolver.swift in Sources */,
 				14CE84B2257F73A300A370CF /* UIActivityViewController+Builder.swift in Sources */,
 				14CE84A9257F6EA200A370CF /* Files.swift in Sources */,
 				14CE84D4257FC7DF00A370CF /* URLField.swift in Sources */,
