@@ -267,9 +267,15 @@ extension ContentPageViewController: WKNavigationDelegate {
 
 extension ContentPageViewController: WKUIDelegate {
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-        // target="_blank"を同じWKWebViewで開く場合に必要な対応
-        if navigationAction.targetFrame?.isMainFrame != true {
-            webView.load(navigationAction.request)
+        guard let url = navigationAction.request.url, let scheme = url.scheme?.lowercased(),
+              scheme == "https" || scheme == "http"
+        else {
+            return nil
+        }
+        UIApplication.shared.open(url) { success in
+            if !success {
+                print("[ContentPageViewController] openURL failed url: \(url)")
+            }
         }
         return nil
     }
