@@ -298,8 +298,13 @@ extension ContentPageViewController: UIGestureRecognizerDelegate {
 
 extension ContentPageViewController {
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        guard textField === urlTextField else { return }
+        
         DispatchQueue.main.async {
-            textField.selectAll(nil)
+            textField.selectedTextRange = textField.textRange(
+                from: textField.beginningOfDocument,
+                to: textField.endOfDocument
+            )
         }
     }
 }
