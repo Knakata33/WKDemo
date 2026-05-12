@@ -77,6 +77,9 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         urlTextField.leftView = leftView
         urlTextField.leftViewMode = .always
         
+        setupButtonHighlightEffect(reloadButton)
+        setupButtonHighlightEffect(bottomBarCloseButton)
+        
         self.webView = webView
         self.containerView.addSubview(webView)
         self.webView.load(URLRequest(url: self.url))
@@ -132,6 +135,25 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         var components = URLComponents(string: "https://www.google.com/search")!
         components.queryItems = [URLQueryItem(name: "q", value: query)]
         return components.url!
+    }
+    
+    private func setupButtonHighlightEffect(_ button: UIButton) {
+        button.configurationUpdateHandler = { btn in
+            var config = btn.configuration
+            if btn.isHighlighted {
+                config?.baseForegroundColor = .systemGray3
+                config?.background.backgroundColor = UIColor.systemGray5.withAlphaComponent(0.3)
+            } else {
+                config?.baseForegroundColor = .label
+                config?.background.backgroundColor = .clear
+            }
+            btn.configuration = config
+            UIView.animate(withDuration: 0.12) {
+                btn.transform = btn.isHighlighted
+                ? CGAffineTransform(scaleX: 0.92, y: 0.92)
+                : .identity
+            }
+        }
     }
     
     @IBAction func urlTextFieldDidEndOnExit(_ sender: UITextField) {
