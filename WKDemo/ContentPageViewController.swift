@@ -11,13 +11,25 @@ import UIKit
 class ContentPageViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var containerView: WKWebView!
     @IBOutlet weak var bottomBarView: UIVisualEffectView!
+    @IBOutlet weak var bottomBarViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bottomBarHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var reloadButton: UIButton!
+    @IBOutlet weak var reloadButtonWidthConstraint: NSLayoutConstraint!
+    
     @IBOutlet weak var urlTextField: UITextField!
-    @IBOutlet weak var bottomBarCloseButton: UIButton!
+    @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var closeButtonWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var contentViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
     
     private weak var webView: WKWebView!
     private var touchLocation: CGPoint = .zero
     private let url: URL
+    private var isURLBarCompact = false
+    private var lastContentOffsetY: CGFloat = 0
     
     init(url: URL) {
         self.url = url
@@ -29,6 +41,14 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func tapAction(_ sender: UITapGestureRecognizer) {
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if !isURLBarCompact {
+            bottomBarViewWidthConstraint.constant = view.bounds.width * 0.6
+        }
     }
     
     override func viewDidLoad() {
@@ -51,6 +71,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
         webView.uiDelegate = self
+        webView.scrollView.delegate = self
         webView.scrollView.alwaysBounceVertical = false
         
         // tapRecognizerは、webView上のタッチ位置を取得するためだけに使用しています
@@ -60,11 +81,8 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         tapRecognizer.numberOfTapsRequired = 1
         webView.addGestureRecognizer(tapRecognizer)
         
-        bottomBarView.layer.cornerRadius = 18
         bottomBarView.clipsToBounds = true
-        
         urlTextField.delegate = self
-        urlTextField.layer.cornerRadius = 10
         urlTextField.clipsToBounds = true
         
         let searchIcon = UIImageView(image: UIImage(systemName: "magnifyingglass"))
@@ -78,7 +96,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         urlTextField.leftViewMode = .always
         
         setupButtonHighlightEffect(reloadButton)
-        setupButtonHighlightEffect(bottomBarCloseButton)
+        setupButtonHighlightEffect(closeButton)
         
         self.webView = webView
         self.containerView.addSubview(webView)
@@ -153,6 +171,37 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
                 ? CGAffineTransform(scaleX: 0.92, y: 0.92)
                 : .identity
             }
+        }
+    }
+    
+    private func setURLBarCompact(_ isCompact: Bool) {
+        guard isURLBarCompact != isCompact else { return }
+        isURLBarCompact = isCompact
+        UIView.animate(
+            withDuration: 0.25,
+            delay: 0,
+            options: [.curveEaseOut, .allowUserInteraction]
+        ) {
+            // barサイズを調整
+            self.bottomBarViewWidthConstraint.constant = self.view.bounds.width * (isCompact ? 0.2 : 0.6)
+            self.bottomBarHeightConstraint.constant = isCompact ? 24 : 48
+            self.reloadButtonWidthConstraint.constant = isCompact ? 0 : 36
+            self.closeButtonWidthConstraint.constant = isCompact ? 0 : 36
+            self.contentViewLeadingConstraint.constant = isCompact ? 6 : 10
+            self.contentViewTrailingConstraint.constant = isCompact ? 6 : 10
+            self.contentViewTopConstraint.constant = isCompact ? 4 : 8
+            self.contentViewBottomConstraint.constant = isCompact ? 4 : 8
+            self.bottomBarView.layer.cornerRadius = isCompact ? 8 : 18
+            self.contentView.layer.cornerRadius = isCompact ? 6 : 12
+            
+            // ボタンを薄く
+            self.reloadButton.alpha = isCompact ? 0 : 1
+            self.closeButton.alpha = isCompact ? 0 : 1
+            // barを少し下げる
+            self.bottomBarView.transform = isCompact
+            ? CGAffineTransform(translationX: 0, y: 4)
+            : .identity
+            self.view.layoutIfNeeded()
         }
     }
     
@@ -328,5 +377,30 @@ extension ContentPageViewController {
                 to: textField.endOfDocument
             )
         }
+    }
+}
+
+extension ContentPageViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        lastContentOffsetY = scrollView.contentOffset.y
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard !urlTextField.isEditing else { return }
+        
+        let currentY = scrollView.contentOffset.y
+        let diff = currentY - lastContentOffsetY
+        
+        // 下にスクロール開始したらコンパクト
+        if diff > 6 {
+            setURLBarCompact(true)
+        }
+        
+        // 上に戻したら展開
+        if diff < -6 || currentY <= 0 {
+            setURLBarCompact(false)
+        }
+        
+        lastContentOffsetY = currentY
     }
 }

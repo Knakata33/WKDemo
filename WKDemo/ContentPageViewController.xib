@@ -11,10 +11,19 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ContentPageViewController" customModule="WKDemo" customModuleProvider="target">
             <connections>
-                <outlet property="bottomBarCloseButton" destination="F0v-ih-mTU" id="IQb-DD-k2z"/>
+                <outlet property="bottomBarHeightConstraint" destination="f4L-a0-at0" id="lZG-Gh-6pq"/>
                 <outlet property="bottomBarView" destination="opw-Wi-3Yd" id="BB6-J5-JgD"/>
+                <outlet property="bottomBarViewWidthConstraint" destination="t2m-6h-oxt" id="cvD-SM-GrN"/>
+                <outlet property="closeButton" destination="F0v-ih-mTU" id="IQb-DD-k2z"/>
+                <outlet property="closeButtonWidthConstraint" destination="4py-q3-eSn" id="Ao5-wM-Lmk"/>
                 <outlet property="containerView" destination="VDI-8s-Isy" id="Rme-Jp-vtk"/>
+                <outlet property="contentView" destination="oi7-Tp-kJL" id="GLD-58-z65"/>
+                <outlet property="contentViewBottomConstraint" destination="v6W-SA-lu8" id="gcz-21-jPy"/>
+                <outlet property="contentViewLeadingConstraint" destination="aJN-AU-NVh" id="XUY-25-UiP"/>
+                <outlet property="contentViewTopConstraint" destination="2tc-iH-Hh3" id="Tr4-Kv-clj"/>
+                <outlet property="contentViewTrailingConstraint" destination="Qy7-Ll-piD" id="ZUq-pY-UcO"/>
                 <outlet property="reloadButton" destination="GtT-gk-TI1" id="KFj-Xu-tVC"/>
+                <outlet property="reloadButtonWidthConstraint" destination="lUf-lC-d2F" id="p1W-gz-UWr"/>
                 <outlet property="urlTextField" destination="56Y-ld-uFh" id="y3S-ce-gLz"/>
                 <outlet property="view" destination="iN0-l3-epB" id="SMC-0Y-5my"/>
             </connections>
@@ -29,62 +38,75 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="opw-Wi-3Yd" userLabel="BottomBarView">
-                    <rect key="frame" x="226.5" y="646" width="680" height="48"/>
+                    <rect key="frame" x="266.5" y="650" width="600" height="44"/>
                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="mFS-8n-Qct">
-                        <rect key="frame" x="0.0" y="0.0" width="680" height="48"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="検索またはURLを入力" textAlignment="natural" minimumFontSize="14" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="56Y-ld-uFh" userLabel="URL Text Field">
-                                <rect key="frame" x="68" y="6" width="544" height="36"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oi7-Tp-kJL" userLabel="Content View">
+                                <rect key="frame" x="18" y="8" width="564" height="28"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GtT-gk-TI1" userLabel="Reload Button">
+                                        <rect key="frame" x="20" y="-8" width="36" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="A1C-lK-X4Y"/>
+                                            <constraint firstAttribute="width" constant="36" id="lUf-lC-d2F"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="tintColor"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="Reload.png" title=""/>
+                                        <connections>
+                                            <action selector="reloadButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="GSz-bX-RGX"/>
+                                        </connections>
+                                    </button>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="検索またはURLを入力" textAlignment="natural" minimumFontSize="14" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="56Y-ld-uFh" userLabel="URL Text Field">
+                                        <rect key="frame" x="64" y="-4" width="448" height="36"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="ehS-yB-4nb"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="URL" returnKeyType="go" enablesReturnKeyAutomatically="YES" textContentType="url"/>
+                                        <connections>
+                                            <action selector="urlTextFieldDidEndOnExit:" destination="-1" eventType="editingDidEndOnExit" id="590-33-m5i"/>
+                                        </connections>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F0v-ih-mTU" userLabel="Close Button">
+                                        <rect key="frame" x="520" y="-8" width="36" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="36" id="4py-q3-eSn"/>
+                                            <constraint firstAttribute="height" constant="44" id="ME0-a3-92h"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="tintColor"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="ReloadCancel.png" title=""/>
+                                        <connections>
+                                            <action selector="bottomBarCloseButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="ilm-DF-K26"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="36" id="ehS-yB-4nb"/>
+                                    <constraint firstItem="GtT-gk-TI1" firstAttribute="centerY" secondItem="oi7-Tp-kJL" secondAttribute="centerY" id="9ia-Vy-8fJ"/>
+                                    <constraint firstItem="F0v-ih-mTU" firstAttribute="leading" secondItem="56Y-ld-uFh" secondAttribute="trailing" constant="8" id="9md-Fe-sy2"/>
+                                    <constraint firstItem="56Y-ld-uFh" firstAttribute="centerY" secondItem="oi7-Tp-kJL" secondAttribute="centerY" id="EOb-Rb-RQd"/>
+                                    <constraint firstItem="GtT-gk-TI1" firstAttribute="leading" secondItem="oi7-Tp-kJL" secondAttribute="leading" constant="20" symbolic="YES" id="SaD-Az-vUS"/>
+                                    <constraint firstItem="56Y-ld-uFh" firstAttribute="leading" secondItem="GtT-gk-TI1" secondAttribute="trailing" constant="8" id="iz3-hY-4sM"/>
+                                    <constraint firstAttribute="trailing" secondItem="F0v-ih-mTU" secondAttribute="trailing" constant="8" id="o4W-bF-mGq"/>
+                                    <constraint firstItem="F0v-ih-mTU" firstAttribute="centerY" secondItem="oi7-Tp-kJL" secondAttribute="centerY" id="p5j-FI-Dwi"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <textInputTraits key="textInputTraits" keyboardType="URL" returnKeyType="go" enablesReturnKeyAutomatically="YES" textContentType="url"/>
-                                <connections>
-                                    <action selector="urlTextFieldDidEndOnExit:" destination="-1" eventType="editingDidEndOnExit" id="590-33-m5i"/>
-                                </connections>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GtT-gk-TI1" userLabel="Reload Button">
-                                <rect key="frame" x="5" y="2" width="53" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="YWS-FW-zJi"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="tintColor"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="Reload.png" title=""/>
-                                <connections>
-                                    <action selector="reloadButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="GSz-bX-RGX"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F0v-ih-mTU" userLabel="Close Button">
-                                <rect key="frame" x="622" y="2" width="53" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="K2Y-ZA-UgI"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="tintColor"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="ReloadCancel.png" title=""/>
-                                <connections>
-                                    <action selector="bottomBarCloseButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="ilm-DF-K26"/>
-                                </connections>
-                            </button>
+                            </view>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="GtT-gk-TI1" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="56Y-ld-uFh" secondAttribute="leading" priority="999" constant="5" id="J5L-k8-apO"/>
-                            <constraint firstItem="F0v-ih-mTU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="56Y-ld-uFh" secondAttribute="trailing" priority="999" constant="-5" id="Qfa-Q2-q0e"/>
+                            <constraint firstItem="oi7-Tp-kJL" firstAttribute="top" secondItem="mFS-8n-Qct" secondAttribute="top" constant="8" id="2tc-iH-Hh3"/>
+                            <constraint firstAttribute="trailing" secondItem="oi7-Tp-kJL" secondAttribute="trailing" constant="18" id="Qy7-Ll-piD"/>
+                            <constraint firstItem="oi7-Tp-kJL" firstAttribute="leading" secondItem="mFS-8n-Qct" secondAttribute="leading" constant="18" id="aJN-AU-NVh"/>
+                            <constraint firstAttribute="bottom" secondItem="oi7-Tp-kJL" secondAttribute="bottom" constant="8" id="v6W-SA-lu8"/>
                         </constraints>
                     </view>
                     <constraints>
-                        <constraint firstItem="F0v-ih-mTU" firstAttribute="centerY" secondItem="opw-Wi-3Yd" secondAttribute="centerY" id="9XA-s7-hI1"/>
-                        <constraint firstItem="56Y-ld-uFh" firstAttribute="centerX" secondItem="opw-Wi-3Yd" secondAttribute="centerX" id="BZc-14-MbU"/>
-                        <constraint firstItem="56Y-ld-uFh" firstAttribute="centerY" secondItem="opw-Wi-3Yd" secondAttribute="centerY" id="Dop-ec-0Ko"/>
-                        <constraint firstItem="GtT-gk-TI1" firstAttribute="leading" secondItem="opw-Wi-3Yd" secondAttribute="leading" constant="5" id="Eif-s7-XIJ"/>
-                        <constraint firstItem="GtT-gk-TI1" firstAttribute="centerY" secondItem="opw-Wi-3Yd" secondAttribute="centerY" id="NNj-Pd-vcm"/>
-                        <constraint firstItem="56Y-ld-uFh" firstAttribute="width" secondItem="opw-Wi-3Yd" secondAttribute="width" multiplier="0.8" id="d1T-kC-HOr"/>
-                        <constraint firstAttribute="trailing" secondItem="F0v-ih-mTU" secondAttribute="trailing" constant="5" id="fRq-92-l4C"/>
-                        <constraint firstAttribute="height" constant="48" id="rkc-1x-imN"/>
+                        <constraint firstAttribute="height" constant="44" id="f4L-a0-at0"/>
+                        <constraint firstAttribute="width" constant="600" id="t2m-6h-oxt"/>
                     </constraints>
                     <blurEffect style="regular"/>
                 </visualEffectView>
@@ -97,8 +119,7 @@
                 <constraint firstItem="VDI-8s-Isy" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="KnB-lY-yvg"/>
                 <constraint firstItem="VDI-8s-Isy" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="SGm-Ew-7QZ"/>
                 <constraint firstAttribute="leading" secondItem="VDI-8s-Isy" secondAttribute="leading" id="ZZD-4g-Avk"/>
-                <constraint firstItem="opw-Wi-3Yd" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="pAf-IM-6RX"/>
-                <constraint firstItem="opw-Wi-3Yd" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.6" id="xhM-45-noD"/>
+                <constraint firstItem="opw-Wi-3Yd" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="pAf-IM-6RX"/>
             </constraints>
             <point key="canvasLocation" x="-39.452780229479259" y="108.06451612903226"/>
         </view>
@@ -106,8 +127,11 @@
     <resources>
         <image name="Reload.png" width="29" height="29"/>
         <image name="ReloadCancel.png" width="29" height="29"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="tintColor">
-            <color red="0.0" green="0.53333333333333333" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.53333333329999999" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
