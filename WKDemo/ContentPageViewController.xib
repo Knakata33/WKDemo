@@ -38,16 +38,16 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="opw-Wi-3Yd" userLabel="BottomBarView">
-                    <rect key="frame" x="266.5" y="650" width="600" height="44"/>
+                    <rect key="frame" x="316.5" y="650" width="500" height="44"/>
                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="mFS-8n-Qct">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="500" height="44"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oi7-Tp-kJL" userLabel="Content View">
-                                <rect key="frame" x="18" y="8" width="564" height="28"/>
+                                <rect key="frame" x="18" y="8" width="464" height="28"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GtT-gk-TI1" userLabel="Reload Button">
-                                        <rect key="frame" x="20" y="-8" width="36" height="44"/>
+                                        <rect key="frame" x="2" y="-8" width="36" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="A1C-lK-X4Y"/>
                                             <constraint firstAttribute="width" constant="36" id="lUf-lC-d2F"/>
@@ -59,8 +59,8 @@
                                             <action selector="reloadButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="GSz-bX-RGX"/>
                                         </connections>
                                     </button>
-                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="検索またはURLを入力" textAlignment="natural" minimumFontSize="14" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="56Y-ld-uFh" userLabel="URL Text Field">
-                                        <rect key="frame" x="64" y="-4" width="448" height="36"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="検索またはURLを入力" minimumFontSize="14" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="56Y-ld-uFh" userLabel="URL Text Field">
+                                        <rect key="frame" x="40" y="-4" width="382" height="36"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="36" id="ehS-yB-4nb"/>
@@ -72,7 +72,7 @@
                                         </connections>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F0v-ih-mTU" userLabel="Close Button">
-                                        <rect key="frame" x="520" y="-8" width="36" height="44"/>
+                                        <rect key="frame" x="424" y="-8" width="36" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="36" id="4py-q3-eSn"/>
                                             <constraint firstAttribute="height" constant="44" id="ME0-a3-92h"/>
@@ -88,11 +88,11 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="GtT-gk-TI1" firstAttribute="centerY" secondItem="oi7-Tp-kJL" secondAttribute="centerY" id="9ia-Vy-8fJ"/>
-                                    <constraint firstItem="F0v-ih-mTU" firstAttribute="leading" secondItem="56Y-ld-uFh" secondAttribute="trailing" constant="8" id="9md-Fe-sy2"/>
+                                    <constraint firstItem="F0v-ih-mTU" firstAttribute="leading" secondItem="56Y-ld-uFh" secondAttribute="trailing" constant="2" id="9md-Fe-sy2"/>
                                     <constraint firstItem="56Y-ld-uFh" firstAttribute="centerY" secondItem="oi7-Tp-kJL" secondAttribute="centerY" id="EOb-Rb-RQd"/>
-                                    <constraint firstItem="GtT-gk-TI1" firstAttribute="leading" secondItem="oi7-Tp-kJL" secondAttribute="leading" constant="20" symbolic="YES" id="SaD-Az-vUS"/>
-                                    <constraint firstItem="56Y-ld-uFh" firstAttribute="leading" secondItem="GtT-gk-TI1" secondAttribute="trailing" constant="8" id="iz3-hY-4sM"/>
-                                    <constraint firstAttribute="trailing" secondItem="F0v-ih-mTU" secondAttribute="trailing" constant="8" id="o4W-bF-mGq"/>
+                                    <constraint firstItem="GtT-gk-TI1" firstAttribute="leading" secondItem="oi7-Tp-kJL" secondAttribute="leading" constant="2" id="SaD-Az-vUS"/>
+                                    <constraint firstItem="56Y-ld-uFh" firstAttribute="leading" secondItem="GtT-gk-TI1" secondAttribute="trailing" constant="2" id="iz3-hY-4sM"/>
+                                    <constraint firstAttribute="trailing" secondItem="F0v-ih-mTU" secondAttribute="trailing" constant="4" id="o4W-bF-mGq"/>
                                     <constraint firstItem="F0v-ih-mTU" firstAttribute="centerY" secondItem="oi7-Tp-kJL" secondAttribute="centerY" id="p5j-FI-Dwi"/>
                                 </constraints>
                             </view>
@@ -106,7 +106,7 @@
                     </view>
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="f4L-a0-at0"/>
-                        <constraint firstAttribute="width" constant="600" id="t2m-6h-oxt"/>
+                        <constraint firstAttribute="width" constant="500" id="t2m-6h-oxt"/>
                     </constraints>
                     <blurEffect style="regular"/>
                 </visualEffectView>

@@ -183,7 +183,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
             options: [.curveEaseOut, .allowUserInteraction]
         ) {
             // barサイズを調整
-            self.bottomBarViewWidthConstraint.constant = self.view.bounds.width * (isCompact ? 0.2 : 0.6)
+            self.bottomBarViewWidthConstraint.constant = self.view.bounds.width * (isCompact ? 0.15 : 0.5)
             self.bottomBarHeightConstraint.constant = isCompact ? 24 : 48
             self.reloadButtonWidthConstraint.constant = isCompact ? 0 : 36
             self.closeButtonWidthConstraint.constant = isCompact ? 0 : 36
@@ -191,16 +191,17 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
             self.contentViewTrailingConstraint.constant = isCompact ? 6 : 10
             self.contentViewTopConstraint.constant = isCompact ? 4 : 8
             self.contentViewBottomConstraint.constant = isCompact ? 4 : 8
+            
             self.bottomBarView.layer.cornerRadius = isCompact ? 8 : 18
             self.contentView.layer.cornerRadius = isCompact ? 6 : 12
             
-            // ボタンを薄く
             self.reloadButton.alpha = isCompact ? 0 : 1
             self.closeButton.alpha = isCompact ? 0 : 1
-            // barを少し下げる
             self.bottomBarView.transform = isCompact
             ? CGAffineTransform(translationX: 0, y: 4)
             : .identity
+            self.urlTextField.leftViewMode = isCompact ? .never : .always
+            
             self.view.layoutIfNeeded()
         }
     }
@@ -244,7 +245,7 @@ extension ContentPageViewController: WKNavigationDelegate {
                 return
             }
         }
-        // TODO: 現行の完了ボタン→再度カードを開く、による再接続処理をやめて、LoadErrorView表示＆リロードボタンによるリクエスト再生成にする
+        // TODO: 現行の開き直しによる再接続処理をやめて、LoadErrorView表示＆リロードボタンによるリクエスト再生成にする
         print(error)
     }
     
@@ -255,7 +256,7 @@ extension ContentPageViewController: WKNavigationDelegate {
                 return
             }
         }
-        // TODO: 現行の完了ボタン→再度カードを開く、による再接続処理をやめて、LoadErrorView表示＆リロードボタンによるリクエスト再生成にする
+        // TODO: 現行の開き直しによる再接続処理をやめて、LoadErrorView表示＆リロードボタンによるリクエスト再生成にする
         print(error)
     }
     
