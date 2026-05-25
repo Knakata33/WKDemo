@@ -103,58 +103,6 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         self.webView.load(URLRequest(url: self.url))
     }
     
-    private func looksLikeHost(_ text: String) -> Bool {
-        //　まず空白チェック
-        if text.contains(" ") {
-            return false
-        }
-        
-        // localhost(localhost:)は例外
-        if text == "localhost" || text.hasPrefix("localhost:") {
-            return true
-        }
-        
-        // 通常のホストを判定
-        if !text.contains(".") {
-            return false
-        }
-        
-        guard let components = URLComponents(string: "https://\(text)"),
-              let host = components.host,
-              !host.isEmpty else {
-            return false
-        }
-        
-        return true
-    }
-    
-    private func makeBrowsableURL(from input: String) -> URL? {
-        let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        if trimmed.hasPrefix("http://") || trimmed.hasPrefix("https://") {
-            guard let url = URL(string: trimmed),
-                  let scheme = url.scheme,
-                  let host = url.host,
-                  !scheme.isEmpty,
-                  !host.isEmpty else {
-                return nil
-            }
-            return url
-        }
-        
-        if looksLikeHost(trimmed), let url = URL(string: "https://\(trimmed)") {
-            return url
-        }
-        
-        return nil
-    }
-    
-    private func makeGoogleSearchURL(query: String) -> URL {
-        var components = URLComponents(string: "https://www.google.com/search")!
-        components.queryItems = [URLQueryItem(name: "q", value: query)]
-        return components.url!
-    }
-    
     private func setupButtonHighlightEffect(_ button: UIButton) {
         button.configurationUpdateHandler = { btn in
             var config = btn.configuration
