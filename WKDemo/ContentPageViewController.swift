@@ -81,22 +81,9 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         tapRecognizer.numberOfTapsRequired = 1
         webView.addGestureRecognizer(tapRecognizer)
         
-        bottomBarView.clipsToBounds = true
-        urlTextField.delegate = self
-        urlTextField.clipsToBounds = true
-        
-        let searchIcon = UIImageView(image: UIImage(systemName: "magnifyingglass"))
-        searchIcon.tintColor = .systemGray2
-        searchIcon.contentMode = .scaleAspectFit
-        searchIcon.frame = CGRect(x: 8, y: 0, width: 18, height: 18)
-        
-        let leftView = UIView(frame: CGRect(x: 0, y: 0, width: 34, height: 18))
-        leftView.addSubview(searchIcon)
-        urlTextField.leftView = leftView
-        urlTextField.leftViewMode = .always
-        
-        setupButtonHighlightEffect(reloadButton)
-        setupButtonHighlightEffect(closeButton)
+        setupBottomBar()
+        setupURLTextField()
+        setupButtons()
         
         self.webView = webView
         self.containerView.addSubview(webView)
@@ -120,6 +107,33 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
                 : .identity
             }
         }
+    }
+    
+    private func setupBottomBar() {
+        bottomBarView.clipsToBounds = true
+        contentView.clipsToBounds = true
+    }
+    
+    private func setupButtons() {
+        setupButtonHighlightEffect(reloadButton)
+        setupButtonHighlightEffect(closeButton)
+    }
+    
+    private func makeSearchIconiew() -> UIView {
+        let imageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+        imageView.tintColor = .systemGray2
+        imageView.contentMode = .scaleAspectFit
+        imageView.frame = CGRect(x: 8, y: 0, width: 18, height: 18)
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 34, height: 18))
+        view.addSubview(imageView)
+        return view
+    }
+    
+    private func setupURLTextField() {
+        urlTextField.delegate = self
+        urlTextField.clipsToBounds = true
+        urlTextField.leftView = makeSearchIconiew()
+        urlTextField.leftViewMode = .always
     }
     
     private func setURLBarCompact(_ isCompact: Bool) {
