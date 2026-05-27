@@ -28,6 +28,7 @@
 		14CE84D0257F8A8300A370CF /* ReloadCancel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 14CE84CE257F8A8300A370CF /* ReloadCancel@2x.png */; };
 		14CE84D1257F8A8300A370CF /* ReloadCancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 14CE84CF257F8A8300A370CF /* ReloadCancel.png */; };
 		14CE84D4257FC7DF00A370CF /* URLField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CE84D3257FC7DF00A370CF /* URLField.swift */; };
+		14DB4E022FC6FCB9009EAEC6 /* URLBarMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DB4E012FC6FCAF009EAEC6 /* URLBarMetrics.swift */; };
 		14DDA6652F8CF152007E46EC /* WebNavigationResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DDA6642F8CF14B007E46EC /* WebNavigationResolver.swift */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		14CE84CF257F8A8300A370CF /* ReloadCancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ReloadCancel.png; sourceTree = "<group>"; };
 		14CE84D3257FC7DF00A370CF /* URLField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLField.swift; sourceTree = "<group>"; };
 		14D42C4A2F32F9D3000BA513 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = .gitignore; sourceTree = "<group>"; };
+		14DB4E012FC6FCAF009EAEC6 /* URLBarMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLBarMetrics.swift; sourceTree = "<group>"; };
 		14DDA6642F8CF14B007E46EC /* WebNavigationResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebNavigationResolver.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,6 +92,7 @@
 		14BBE134257E275100ED11A2 /* WKDemo */ = {
 			isa = PBXGroup;
 			children = (
+				14DB4E012FC6FCAF009EAEC6 /* URLBarMetrics.swift */,
 				14CE84C8257F88CA00A370CF /* Images */,
 				14BBE135257E275100ED11A2 /* AppDelegate.swift */,
 				14BBE137257E275100ED11A2 /* SceneDelegate.swift */,
@@ -212,6 +215,7 @@
 				14CE84D4257FC7DF00A370CF /* URLField.swift in Sources */,
 				14CE84B5257F740E00A370CF /* UIActivity+CompletionMessage.swift in Sources */,
 				14CE84AF257F706C00A370CF /* FileManager+Support.swift in Sources */,
+				14DB4E022FC6FCB9009EAEC6 /* URLBarMetrics.swift in Sources */,
 				14CE84BB257F74D600A370CF /* UIPopoverPresentationController+Compat.swift in Sources */,
 				14444DF22F1A37A000314D25 /* StarPageView.swift in Sources */,
 			);

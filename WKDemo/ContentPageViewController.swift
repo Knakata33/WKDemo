@@ -125,33 +125,32 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private func setURLBarCompact(_ isCompact: Bool) {
         guard isURLBarCompact != isCompact else { return }
         isURLBarCompact = isCompact
+        let metrics: URLBarMetrics = isCompact ? .compact : .regular
         UIView.animate(
             withDuration: 0.25,
             delay: 0,
             options: [.curveEaseOut, .allowUserInteraction]
         ) {
-            // barサイズを調整
-            self.bottomBarViewWidthConstraint.constant = self.view.bounds.width * (isCompact ? 0.15 : 0.5)
-            self.bottomBarHeightConstraint.constant = isCompact ? 24 : 48
-            self.reloadButtonWidthConstraint.constant = isCompact ? 0 : 36
-            self.closeButtonWidthConstraint.constant = isCompact ? 0 : 36
-            self.contentViewLeadingConstraint.constant = isCompact ? 6 : 10
-            self.contentViewTrailingConstraint.constant = isCompact ? 6 : 10
-            self.contentViewTopConstraint.constant = isCompact ? 4 : 8
-            self.contentViewBottomConstraint.constant = isCompact ? 4 : 8
-            
-            self.bottomBarView.layer.cornerRadius = isCompact ? 8 : 18
-            self.contentView.layer.cornerRadius = isCompact ? 6 : 12
-            
-            self.reloadButton.alpha = isCompact ? 0 : 1
-            self.closeButton.alpha = isCompact ? 0 : 1
-            self.bottomBarView.transform = isCompact
-            ? CGAffineTransform(translationX: 0, y: 4)
-            : .identity
-            self.urlTextField.leftViewMode = isCompact ? .never : .always
-            
+            self.applyURLBarMetrics(metrics)
             self.view.layoutIfNeeded()
         }
+    }
+    
+    private func applyURLBarMetrics(_ metrics: URLBarMetrics) {
+        bottomBarViewWidthConstraint.constant = view.bounds.width * metrics.widthRatio
+        bottomBarHeightConstraint.constant = metrics.height
+        reloadButtonWidthConstraint.constant = metrics.buttonWidth
+        closeButtonWidthConstraint.constant = metrics.buttonWidth
+        contentViewLeadingConstraint.constant = metrics.horizontalInset
+        contentViewTrailingConstraint.constant = metrics.horizontalInset
+        contentViewTopConstraint.constant = metrics.verticalInset
+        contentViewBottomConstraint.constant = metrics.verticalInset
+        bottomBarView.layer.cornerRadius = metrics.barCornerRadius
+        contentView.layer.cornerRadius = metrics.contentCornerRadius
+        reloadButton.alpha = metrics.buttonAlpha
+        closeButton.alpha = metrics.buttonAlpha
+        bottomBarView.transform = metrics.transform
+        urlTextField.leftViewMode = metrics.leftViewMode
     }
     
     @IBAction func urlTextFieldDidEndOnExit(_ sender: UITextField) {
