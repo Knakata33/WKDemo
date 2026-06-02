@@ -51,15 +51,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.setNeedsStatusBarAppearanceUpdate()
-        
-        var config = UIButton.Configuration.plain()
-        config.image = UIImage(systemName: "xmark.circle")
-        config.preferredSymbolConfigurationForImage =
-        UIImage.SymbolConfiguration(pointSize: 32, weight: .semibold)
-        
+    private func makeWebViewConfiguration() -> WKWebViewConfiguration {
         let configuration = WKWebViewConfiguration()
         if #available(iOS 18.0, *) {
             configuration.writingToolsBehavior = .none
@@ -67,8 +59,13 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         configuration.websiteDataStore = .nonPersistent()
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
-        let webView = WKWebView(frame: self.containerView.bounds, configuration: configuration)
-        webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        return configuration
+    }
+    
+    private func setupWebView() {
+        let webView = WKWebView(frame: self.containerView.bounds, configuration: makeWebViewConfiguration())
+        
+        webView.autoresizingMask = [.flexibleWidth]
         webView.navigationDelegate = self
         webView.uiDelegate = self
         webView.scrollView.delegate = self
@@ -81,12 +78,18 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         tapRecognizer.numberOfTapsRequired = 1
         webView.addGestureRecognizer(tapRecognizer)
         
+        containerView.addSubview(webView)
+        self.webView = webView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.setNeedsStatusBarAppearanceUpdate()
+        
+        setupWebView()
         setupBottomBar()
         setupURLTextField()
         setupButtons()
-        
-        self.webView = webView
-        self.containerView.addSubview(webView)
         self.webView.load(URLRequest(url: self.url))
     }
     
