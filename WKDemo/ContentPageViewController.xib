@@ -59,8 +59,14 @@
                                             <action selector="reloadButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="GSz-bX-RGX"/>
                                         </connections>
                                     </button>
+                                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Ru5-Xo-Lar">
+                                        <rect key="frame" x="41" y="26" width="382" height="2"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="2" id="hip-Se-3qp"/>
+                                        </constraints>
+                                    </progressView>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="検索またはURLを入力" minimumFontSize="14" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="56Y-ld-uFh" userLabel="URL Text Field">
-                                        <rect key="frame" x="40" y="-4" width="382" height="36"/>
+                                        <rect key="frame" x="40" y="0.0" width="382" height="36"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="36" id="ehS-yB-4nb"/>
@@ -87,13 +93,17 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstItem="GtT-gk-TI1" firstAttribute="centerY" secondItem="oi7-Tp-kJL" secondAttribute="centerY" id="9ia-Vy-8fJ"/>
+                                    <constraint firstItem="Ru5-Xo-Lar" firstAttribute="centerX" secondItem="oi7-Tp-kJL" secondAttribute="centerX" id="0AY-fR-mcN"/>
                                     <constraint firstItem="F0v-ih-mTU" firstAttribute="leading" secondItem="56Y-ld-uFh" secondAttribute="trailing" constant="2" id="9md-Fe-sy2"/>
-                                    <constraint firstItem="56Y-ld-uFh" firstAttribute="centerY" secondItem="oi7-Tp-kJL" secondAttribute="centerY" id="EOb-Rb-RQd"/>
+                                    <constraint firstAttribute="bottom" secondItem="Ru5-Xo-Lar" secondAttribute="bottom" id="Hkh-91-AEP"/>
+                                    <constraint firstItem="Ru5-Xo-Lar" firstAttribute="width" secondItem="56Y-ld-uFh" secondAttribute="width" id="IeR-0p-ma9"/>
                                     <constraint firstItem="GtT-gk-TI1" firstAttribute="leading" secondItem="oi7-Tp-kJL" secondAttribute="leading" constant="2" id="SaD-Az-vUS"/>
+                                    <constraint firstItem="56Y-ld-uFh" firstAttribute="top" secondItem="oi7-Tp-kJL" secondAttribute="top" id="XJc-Bf-bl3"/>
                                     <constraint firstItem="56Y-ld-uFh" firstAttribute="leading" secondItem="GtT-gk-TI1" secondAttribute="trailing" constant="2" id="iz3-hY-4sM"/>
                                     <constraint firstAttribute="trailing" secondItem="F0v-ih-mTU" secondAttribute="trailing" constant="4" id="o4W-bF-mGq"/>
                                     <constraint firstItem="F0v-ih-mTU" firstAttribute="centerY" secondItem="oi7-Tp-kJL" secondAttribute="centerY" id="p5j-FI-Dwi"/>
+                                    <constraint firstItem="GtT-gk-TI1" firstAttribute="centerY" secondItem="oi7-Tp-kJL" secondAttribute="centerY" id="pMa-JK-cjU"/>
+                                    <constraint firstItem="56Y-ld-uFh" firstAttribute="bottom" secondItem="Ru5-Xo-Lar" secondAttribute="top" constant="10" id="qQq-Va-Yve"/>
                                 </constraints>
                             </view>
                         </subviews>
