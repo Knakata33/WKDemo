@@ -22,6 +22,7 @@
                 <outlet property="contentViewLeadingConstraint" destination="aJN-AU-NVh" id="XUY-25-UiP"/>
                 <outlet property="contentViewTopConstraint" destination="2tc-iH-Hh3" id="Tr4-Kv-clj"/>
                 <outlet property="contentViewTrailingConstraint" destination="Qy7-Ll-piD" id="ZUq-pY-UcO"/>
+                <outlet property="progressView" destination="Ru5-Xo-Lar" id="mft-gt-SQU"/>
                 <outlet property="reloadButton" destination="GtT-gk-TI1" id="KFj-Xu-tVC"/>
                 <outlet property="reloadButtonWidthConstraint" destination="lUf-lC-d2F" id="p1W-gz-UWr"/>
                 <outlet property="urlTextField" destination="56Y-ld-uFh" id="y3S-ce-gLz"/>

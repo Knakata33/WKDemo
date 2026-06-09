@@ -18,6 +18,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var urlTextField: UITextField!
     @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var closeButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var contentViewLeadingConstraint: NSLayoutConstraint!
@@ -30,6 +31,8 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private let url: URL
     private var isURLBarCompact = false
     private var lastContentOffsetY: CGFloat = 0
+    private var progressObservation: NSKeyValueObservation?
+    private var isLoadingObservation: NSKeyValueObservation?
     
     init(url: URL) {
         self.url = url
@@ -60,6 +63,11 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
         return configuration
+    }
+    
+    private func setupProgressView() {
+        progressView.progress = 0
+        progressView.alpha = 0
     }
     
     private func setupWebView() {
