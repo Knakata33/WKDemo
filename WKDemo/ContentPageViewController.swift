@@ -170,6 +170,11 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         urlTextField.leftViewMode = metrics.leftViewMode
     }
     
+    private func updateURLTextFieldDisplay() {
+        guard !urlTextField.isEditing else { return }
+        urlTextField.text = webView.url?.displayText
+    }
+    
     @IBAction func urlTextFieldDidEndOnExit(_ sender: UITextField) {
         sender.resignFirstResponder()
         
@@ -198,8 +203,7 @@ extension ContentPageViewController: WKNavigationDelegate {
         let pageZoom = webView.bounds.size.width / webView.scrollView.contentSize.width
         webView.pageZoom = pageZoom
         
-        guard !urlTextField.isEditing else { return }
-        urlTextField.text = webView.url?.absoluteString
+        updateURLTextFieldDisplay()
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
@@ -299,6 +303,10 @@ extension ContentPageViewController: WKNavigationDelegate {
             decisionHandler(policy, preferences)
         }
     }
+    
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        updateURLTextFieldDisplay()
+    }
 }
 
 extension ContentPageViewController: WKUIDelegate {
@@ -336,12 +344,20 @@ extension ContentPageViewController {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         guard textField === urlTextField else { return }
         
+        textField.text = webView.url?.absoluteString
+        
         DispatchQueue.main.async {
             textField.selectedTextRange = textField.textRange(
                 from: textField.beginningOfDocument,
                 to: textField.endOfDocument
             )
         }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        guard textField === urlTextField else { return }
+        
+        updateURLTextFieldDisplay()
     }
 }
 

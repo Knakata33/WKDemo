@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		14444DF22F1A37A000314D25 /* StarPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14444DF12F1A37A000314D25 /* StarPageView.swift */; };
+		1487C8D52FDFB94D003AED23 /* URL+Utill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1487C8D42FDFB944003AED23 /* URL+Utill.swift */; };
 		14BBE136257E275100ED11A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBE135257E275100ED11A2 /* AppDelegate.swift */; };
 		14BBE138257E275100ED11A2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBE137257E275100ED11A2 /* SceneDelegate.swift */; };
 		14BBE13A257E275100ED11A2 /* ContentPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBE139257E275100ED11A2 /* ContentPageViewController.swift */; };
@@ -34,6 +35,7 @@
 
 /* Begin PBXFileReference section */
 		14444DF12F1A37A000314D25 /* StarPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarPageView.swift; sourceTree = "<group>"; };
+		1487C8D42FDFB944003AED23 /* URL+Utill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Utill.swift"; sourceTree = "<group>"; };
 		14BBE132257E275100ED11A2 /* WKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14BBE135257E275100ED11A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		14BBE137257E275100ED11A2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 		14BBE134257E275100ED11A2 /* WKDemo */ = {
 			isa = PBXGroup;
 			children = (
+				1487C8D42FDFB944003AED23 /* URL+Utill.swift */,
 				14DB4E012FC6FCAF009EAEC6 /* URLBarMetrics.swift */,
 				14CE84C8257F88CA00A370CF /* Images */,
 				14BBE135257E275100ED11A2 /* AppDelegate.swift */,
@@ -209,6 +212,7 @@
 				14CE84AC257F6F0B00A370CF /* AtomicBool.swift in Sources */,
 				14BBE138257E275100ED11A2 /* SceneDelegate.swift in Sources */,
 				14CE84A3257F6E1800A370CF /* MIMETypeSupport.swift in Sources */,
+				1487C8D52FDFB94D003AED23 /* URL+Utill.swift in Sources */,
 				14DDA6652F8CF152007E46EC /* WebNavigationResolver.swift in Sources */,
 				14CE84B2257F73A300A370CF /* UIActivityViewController+Builder.swift in Sources */,
 				14CE84A9257F6EA200A370CF /* Files.swift in Sources */,
