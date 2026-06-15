@@ -7,8 +7,14 @@
 
 import Foundation
 
-private extension URL {
+extension URL {
     var displayText: String {
-        host ?? absoluteString
+        guard let host else {
+            return absoluteString
+        }
+        if host.hasPrefix("www.") {
+            return String(host.dropFirst(4))
+        }
+        return host
     }
 }
