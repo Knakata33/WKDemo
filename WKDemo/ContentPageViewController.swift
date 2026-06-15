@@ -70,6 +70,50 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         progressView.alpha = 0
     }
     
+    private func updateProgress(_ progress: Double) {
+        progressView.setProgress(Float(progress), animated: true)
+        
+        if progress >= 1.0 {
+            UIView.animate(withDuration: 0.25, delay: 0.2) {
+                self.progressView.alpha = 0
+            } completion: { _ in
+                self.progressView.progress = 0
+            }
+        } else {
+            progressView.alpha = 1
+            progressView.alpha = 1
+        }
+    }
+    
+    private func updateLoadingState(_ isLoading: Bool) {
+        let imageName = isLoading ? "xmark" : "arrow.clockwise"
+
+        reloadButton.setImage(
+            UIImage(systemName: imageName),
+            for: .normal
+        )
+    }
+    
+    private func observeWebViewState() {
+        progressObservation = webView.observe(
+            \.estimatedProgress,
+             options: [.new]
+        ) { [weak self] webView, _ in
+            DispatchQueue.main.async {
+                self?.updateProgress(webView.estimatedProgress)
+            }
+        }
+        
+        isLoadingObservation = webView.observe(
+            \.isLoading,
+             options: [.new]
+        ) { [weak self] webView, _ in
+            DispatchQueue.main.async {
+                self?.updateLoadingState(webView.isLoading)
+            }
+        }
+    }
+    
     private func setupWebView() {
         let webView = WKWebView(frame: self.containerView.bounds, configuration: makeWebViewConfiguration())
         
@@ -98,6 +142,8 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         setupBottomBar()
         setupURLTextField()
         setupButtons()
+        setupProgressView()
+        observeWebViewState()
         self.webView.load(URLRequest(url: self.url))
     }
     
@@ -193,7 +239,11 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         guard isViewLoaded else {
             return
         }
-        webView.reload()
+        if webView.isLoading {
+            webView.stopLoading()
+        } else {
+            webView.reload()
+        }
     }
     
     @IBAction func bottomBarCloseButtonTouchUpInside(_ sender: Any) {
