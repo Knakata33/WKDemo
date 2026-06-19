@@ -137,6 +137,8 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         urlTextField.clipsToBounds = true
         urlTextField.leftView = makeSearchIconiew()
         urlTextField.leftViewMode = .always
+        let interaction = UIContextMenuInteraction(delegate: self)
+        urlTextField.addInteraction(interaction)
     }
     
     private func setURLBarCompact(_ isCompact: Bool) {
@@ -297,6 +299,14 @@ extension ContentPageViewController: WKNavigationDelegate {
         }
     }
     
+    private func presentShareSheet(_ url: URL) {
+        let vc = UIActivityViewController(
+            activityItems: [url],
+            applicationActivities: nil
+        )
+        present(vc, animated: true)
+    }
+    
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
         debugPrint("ViewController decidePolicy url: \(String(describing: navigationAction.request.url)), preferredContentMode: \(preferences.preferredContentMode.rawValue)")        
         decidePolicy(for: navigationAction) { (policy) in
@@ -383,5 +393,47 @@ extension ContentPageViewController: UIScrollViewDelegate {
         }
         
         lastContentOffsetY = currentY
+    }
+}
+
+extension ContentPageViewController: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(
+        _ interaction: UIContextMenuInteraction,
+        configurationForMenuAtLocation location: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        guard !urlTextField.isEditing else {
+            return nil
+        }
+        guard let url = webView.url else {
+            return nil
+        }
+        return UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: nil
+        ) { _ in
+            let copyAction = UIAction(
+                title: "URLをコピー",
+                image: UIImage(systemName: "doc.on.doc")
+            ) { _ in
+                UIPasteboard.general.string = url.absoluteString
+            }
+            let shareAction = UIAction(
+                title: "共有",
+                image: UIImage(systemName: "square.and.arrow.up")
+            ) { [weak self] _ in
+                self?.presentShareSheet(url)
+            }
+            let safariAction = UIAction(
+                title: "Safariで開く",
+                image: UIImage(systemName: "safari")
+            ) { _ in
+                UIApplication.shared.open(url)
+            }
+            return UIMenu(children: [
+                copyAction,
+                shareAction,
+                safariAction
+            ])
+        }
     }
 }
