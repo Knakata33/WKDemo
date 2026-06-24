@@ -9,7 +9,7 @@ import UIKit
 @preconcurrency import WebKit
 
 class ContentPageViewController: UIViewController, UITextFieldDelegate {
-    @IBOutlet weak var containerView: WKWebView!
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var bottomBarView: UIVisualEffectView!
     @IBOutlet weak var bottomBarViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomBarHeightConstraint: NSLayoutConstraint!
@@ -25,7 +25,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var contentViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
     
-    private weak var webView: WKWebView!
+    private var webView: WKWebView!
     private var touchLocation: CGPoint = .zero
     private let url: URL
     private var isURLBarCompact = false
@@ -65,7 +65,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private func setupWebView() {
         let webView = WKWebView(frame: self.containerView.bounds, configuration: makeWebViewConfiguration())
         
-        webView.autoresizingMask = [.flexibleWidth]
+        webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
         webView.uiDelegate = self
         webView.scrollView.delegate = self
