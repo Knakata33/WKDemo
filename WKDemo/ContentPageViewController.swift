@@ -122,7 +122,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         setupButtonHighlightEffect(closeButton)
     }
     
-    private func makeSearchIconiew() -> UIView {
+    private func makeSearchIconView() -> UIView {
         let imageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
         imageView.tintColor = .systemGray2
         imageView.contentMode = .scaleAspectFit
@@ -135,7 +135,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private func setupURLTextField() {
         urlTextField.delegate = self
         urlTextField.clipsToBounds = true
-        urlTextField.leftView = makeSearchIconiew()
+        urlTextField.leftView = makeSearchIconView()
         urlTextField.leftViewMode = .always
         let interaction = UIContextMenuInteraction(delegate: self)
         urlTextField.addInteraction(interaction)
