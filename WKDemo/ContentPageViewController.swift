@@ -9,7 +9,7 @@ import UIKit
 @preconcurrency import WebKit
 
 class ContentPageViewController: UIViewController, UITextFieldDelegate {
-    @IBOutlet weak var containerView: WKWebView!
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var bottomBarView: UIVisualEffectView!
     @IBOutlet weak var bottomBarViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomBarHeightConstraint: NSLayoutConstraint!
@@ -25,7 +25,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var contentViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
     
-    private weak var webView: WKWebView!
+    private var webView: WKWebView!
     private var touchLocation: CGPoint = .zero
     private let url: URL
     private var isURLBarCompact = false
@@ -47,7 +47,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLayoutSubviews()
         
         if !isURLBarCompact {
-            bottomBarViewWidthConstraint.constant = view.bounds.width * 0.6
+            bottomBarViewWidthConstraint.constant = view.bounds.width * 0.3
         }
     }
     
@@ -65,11 +65,12 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private func setupWebView() {
         let webView = WKWebView(frame: self.containerView.bounds, configuration: makeWebViewConfiguration())
         
-        webView.autoresizingMask = [.flexibleWidth]
+        webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
         webView.uiDelegate = self
         webView.scrollView.delegate = self
         webView.scrollView.alwaysBounceVertical = false
+        webView.allowsBackForwardNavigationGestures = true
         
         // tapRecognizerは、webView上のタッチ位置を取得するためだけに使用しています
         // そのためtapAction自体も呼ばれないよう、gestureRecognizer(_:shouldReceive)にて制御しています
@@ -122,7 +123,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         setupButtonHighlightEffect(closeButton)
     }
     
-    private func makeSearchIconiew() -> UIView {
+    private func makeSearchIconView() -> UIView {
         let imageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
         imageView.tintColor = .systemGray2
         imageView.contentMode = .scaleAspectFit
@@ -135,7 +136,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private func setupURLTextField() {
         urlTextField.delegate = self
         urlTextField.clipsToBounds = true
-        urlTextField.leftView = makeSearchIconiew()
+        urlTextField.leftView = makeSearchIconView()
         urlTextField.leftViewMode = .always
         let interaction = UIContextMenuInteraction(delegate: self)
         urlTextField.addInteraction(interaction)
@@ -202,8 +203,9 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
 
 extension ContentPageViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        let pageZoom = webView.bounds.size.width / webView.scrollView.contentSize.width
-        webView.pageZoom = pageZoom
+        let contentWidth = webView.scrollView.contentSize.width
+        guard contentWidth > 0 else { return }
+        webView.pageZoom = webView.bounds.width / contentWidth
         
         updateURLTextFieldDisplay()
     }
