@@ -70,6 +70,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         webView.uiDelegate = self
         webView.scrollView.delegate = self
         webView.scrollView.alwaysBounceVertical = false
+        webView.allowsBackForwardNavigationGestures = true
         
         // tapRecognizerは、webView上のタッチ位置を取得するためだけに使用しています
         // そのためtapAction自体も呼ばれないよう、gestureRecognizer(_:shouldReceive)にて制御しています
