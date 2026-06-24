@@ -19,7 +19,7 @@ struct URLBarMetrics {
     let leftViewMode: UITextField.ViewMode
 
     static let regular = URLBarMetrics(
-        widthRatio: 0.5,
+        widthRatio: 0.3,
         height: 48,
         buttonWidth: 36,
         horizontalInset: 10,
@@ -32,7 +32,7 @@ struct URLBarMetrics {
     )
 
     static let compact = URLBarMetrics(
-        widthRatio: 0.15,
+        widthRatio: 0.1,
         height: 24,
         buttonWidth: 0,
         horizontalInset: 6,

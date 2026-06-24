@@ -47,7 +47,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLayoutSubviews()
         
         if !isURLBarCompact {
-            bottomBarViewWidthConstraint.constant = view.bounds.width * 0.6
+            bottomBarViewWidthConstraint.constant = view.bounds.width * 0.3
         }
     }
     
@@ -202,8 +202,9 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
 
 extension ContentPageViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        let pageZoom = webView.bounds.size.width / webView.scrollView.contentSize.width
-        webView.pageZoom = pageZoom
+        let contentWidth = webView.scrollView.contentSize.width
+        guard contentWidth > 0 else { return }
+        webView.pageZoom = webView.bounds.width / contentWidth
         
         updateURLTextFieldDisplay()
     }
