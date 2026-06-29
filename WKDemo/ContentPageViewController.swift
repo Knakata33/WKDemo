@@ -122,6 +122,20 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func setupButtons() {
+        let symbolConfiguration = UIImage.SymbolConfiguration(
+            pointSize: 14,
+            weight: .medium
+        )
+        
+        reloadButton.setPreferredSymbolConfiguration(
+            symbolConfiguration,
+            forImageIn: .normal
+        )
+        closeButton.setImage(
+            UIImage(systemName: "xmark", withConfiguration: symbolConfiguration),
+            for: .normal
+        )
+        
         setupButtonHighlightEffect(reloadButton)
         setupButtonHighlightEffect(closeButton)
     }
@@ -216,7 +230,11 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         guard isViewLoaded else {
             return
         }
-        webView.reload()
+        if webView.isLoading {
+            webView.stopLoading()
+        } else {
+            webView.reload()
+        }
     }
     
     @IBAction func bottomBarCloseButtonTouchUpInside(_ sender: Any) {
