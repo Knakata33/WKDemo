@@ -30,6 +30,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private let url: URL
     private var isURLBarCompact = false
     private var lastContentOffsetY: CGFloat = 0
+    private var isLoadingObservation: NSKeyValueObservation?
     
     init(url: URL) {
         self.url = url
@@ -91,6 +92,8 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         setupBottomBar()
         setupURLTextField()
         setupButtons()
+        observeWebViewLoadingState()
+        
         self.webView.load(URLRequest(url: self.url))
     }
     
@@ -119,6 +122,20 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func setupButtons() {
+        let symbolConfiguration = UIImage.SymbolConfiguration(
+            pointSize: 14,
+            weight: .medium
+        )
+        
+        reloadButton.setPreferredSymbolConfiguration(
+            symbolConfiguration,
+            forImageIn: .normal
+        )
+        closeButton.setImage(
+            UIImage(systemName: "xmark", withConfiguration: symbolConfiguration),
+            for: .normal
+        )
+        
         setupButtonHighlightEffect(reloadButton)
         setupButtonHighlightEffect(closeButton)
     }
@@ -178,6 +195,26 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         urlTextField.text = webView.url?.displayText
     }
     
+    private func updateReloadButton(isLoading: Bool) {
+        let imageName = isLoading ? "xmark" : "arrow.clockwise"
+        reloadButton.setImage(
+            UIImage(systemName: imageName),
+            for: .normal
+        )
+        reloadButton.accessibilityLabel = isLoading ? "読み込み停止" : "再読み込み"
+    }
+    
+    private func observeWebViewLoadingState() {
+        isLoadingObservation = webView.observe(
+            \.isLoading,
+            options: [.initial, .new]
+        ) { [weak self] webView, _ in
+            DispatchQueue.main.async {
+                self?.updateReloadButton(isLoading: webView.isLoading)
+            }
+        }
+    }
+    
     @IBAction func urlTextFieldDidEndOnExit(_ sender: UITextField) {
         sender.resignFirstResponder()
         
@@ -193,7 +230,11 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         guard isViewLoaded else {
             return
         }
-        webView.reload()
+        if webView.isLoading {
+            webView.stopLoading()
+        } else {
+            webView.reload()
+        }
     }
     
     @IBAction func bottomBarCloseButtonTouchUpInside(_ sender: Any) {

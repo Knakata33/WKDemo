@@ -54,7 +54,7 @@
                                         </constraints>
                                         <color key="tintColor" systemColor="tintColor"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="Reload.png" title=""/>
+                                        <buttonConfiguration key="configuration" style="plain" image="arrow.clockwise" catalog="system" title=""/>
                                         <connections>
                                             <action selector="reloadButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="GSz-bX-RGX"/>
                                         </connections>
@@ -79,7 +79,7 @@
                                         </constraints>
                                         <color key="tintColor" systemColor="tintColor"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="ReloadCancel.png" title=""/>
+                                        <buttonConfiguration key="configuration" style="plain" image="xmark" catalog="system" title=""/>
                                         <connections>
                                             <action selector="bottomBarCloseButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="ilm-DF-K26"/>
                                         </connections>
@@ -125,8 +125,8 @@
         </view>
     </objects>
     <resources>
-        <image name="Reload.png" width="29" height="29"/>
-        <image name="ReloadCancel.png" width="29" height="29"/>
+        <image name="arrow.clockwise" catalog="system" width="110" height="128"/>
+        <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
