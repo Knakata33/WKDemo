@@ -63,25 +63,36 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         return configuration
     }
     
-    private func setupWebView() {
-        let webView = WKWebView(frame: self.containerView.bounds, configuration: makeWebViewConfiguration())
-        
+    private func configureWebView(_ webView: WKWebView) {
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
         webView.uiDelegate = self
         webView.scrollView.delegate = self
         webView.scrollView.alwaysBounceVertical = false
         webView.allowsBackForwardNavigationGestures = true
-        
-        // tapRecognizerは、webView上のタッチ位置を取得するためだけに使用しています
-        // そのためtapAction自体も呼ばれないよう、gestureRecognizer(_:shouldReceive)にて制御しています
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
-        tapRecognizer.delegate = self
-        tapRecognizer.numberOfTapsRequired = 1
-        webView.addGestureRecognizer(tapRecognizer)
+    }
+    
+    private func addTouchLocationRecognizer(to webView: WKWebView) {
+        let recognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(tapAction(_:))
+        )
+        recognizer.delegate = self
+        recognizer.numberOfTapsRequired = 1
+        webView.addGestureRecognizer(recognizer)
+    }
+    
+    private func setupWebView() {
+        let webView = WKWebView(frame: self.containerView.bounds, configuration: makeWebViewConfiguration())
+        configureWebView(webView)
+        addTouchLocationRecognizer(to: webView)
         
         containerView.addSubview(webView)
         self.webView = webView
+    }
+    
+    private func loadInitialURL() {
+        webView.load(URLRequest(url: url))
     }
     
     override func viewDidLoad() {
@@ -93,8 +104,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         setupURLTextField()
         setupButtons()
         observeWebViewLoadingState()
-        
-        self.webView.load(URLRequest(url: self.url))
+        loadInitialURL()
     }
     
     private func setupButtonHighlightEffect(_ button: UIButton) {
