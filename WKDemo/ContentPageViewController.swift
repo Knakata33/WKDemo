@@ -261,26 +261,26 @@ extension ContentPageViewController: WKNavigationDelegate {
         updateURLTextFieldDisplay()
     }
     
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        // 遷移操作の繰り返しによるリクエストキャンセルエラーのみ無視する
-        if let urlError = error as? URLError {
-            if .cancelled == urlError.code {
-                return
-            }
+    private func shouldIgnoreNavigationError(_ error: Error) -> Bool {
+        guard let urlError = error as? URLError else {
+            return false
         }
-        // TODO: 現行の開き直しによる再接続処理をやめて、LoadErrorView表示＆リロードボタンによるリクエスト再生成にする
+        return urlError.code == .cancelled
+    }
+    
+    private func handleNavigationError(_ error: Error) {
+        if shouldIgnoreNavigationError(error) {
+            return
+        }
         print(error)
     }
     
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        handleNavigationError(error)
+    }
+    
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        // 遷移操作の繰り返しによるリクエストキャンセルエラーのみ無視する
-        if let urlError = error as? URLError {
-            if .cancelled == urlError.code {
-                return
-            }
-        }
-        // TODO: 現行の開き直しによる再接続処理をやめて、LoadErrorView表示＆リロードボタンによるリクエスト再生成にする
-        print(error)
+        handleNavigationError(error)
     }
     
     private func decidePolicy(for navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
