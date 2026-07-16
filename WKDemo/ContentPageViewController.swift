@@ -283,75 +283,139 @@ extension ContentPageViewController: WKNavigationDelegate {
         handleNavigationError(error)
     }
     
-    private func decidePolicy(for navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        guard let url = navigationAction.request.url else {
-            assert(false)
-            decisionHandler(.cancel)
-            return
+    private func allowHTTPNavigationIfNeeded(
+        _ url: URL,
+        decisionHandler: (WKNavigationActionPolicy) -> Void
+    ) -> Bool {
+        guard url.isHTTPOrHTTPS else {
+            return false
         }
-        if let scheme = url.scheme?.lowercased() {
-            if scheme == "https" || scheme == "http" {
-                // iosのUniversal Linksの機能で、webページのアドレスでアプリを起動する機能があるが、YouTube等がアプリ内ブラウザで開けるように強制しています
-                // 副作用として、YouTubeのページ内にある「アプリで開く」ボタンを押しても、
-                // YouTubeアプリが起動せずに後述のopenURLからAppStoreのYouTubeページが開くようになりますが、許容しています
-                // https://stackoverflow.com/questions/38450586/prevent-universal-links-from-opening-in-wkwebview-uiwebview
-                // static WKNavigationActionPolicy const LLWKNavigationActionPolicyAllowWithoutTryingAppLink = WKNavigationActionPolicyAllow + 2;
-                let allowWithoutTryingAppLink = WKNavigationActionPolicy(rawValue: WKNavigationActionPolicy.allow.rawValue + 2)
-                assert(allowWithoutTryingAppLink != nil)
-                decisionHandler(allowWithoutTryingAppLink ?? .allow)
-                return
-            }
-            
-            if let mimeType = DataURLSupport.mimeType(of: url), let pathExtension = MIMETypeSupport.preferredPathExtension(mimeType: mimeType), let data = try? Data(contentsOf: url) {
-                let tempFile = TemporaryFile(pathExtension: pathExtension as String)
-                do {
-                    try data.write(to: tempFile.url, options: .atomic)
-                } catch {
-                    print(error)
-                    decisionHandler(.cancel)
-                    return
-                }
-                
-                let vc = UIActivityViewController.Builder(file: tempFile)
-                    .setSourceRect(CGRect(origin: self.touchLocation, size: .zero), in: self.containerView)
-                    .setCompletionHandler({ [weak self] (message) in
-                        switch message {
-                        case .present(let title):
-                            let dialog = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-                            dialog.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                            dialog.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                            guard let myself = self else {
-                                return
-                            }
-                            myself.present(dialog, animated: true, completion: nil)
-                        case .none:
-                            break
-                        }
-                    })
-                    .setErrorHandler({ (error) in
-                        print(error)
-                    })
-                    .build()
-                present(vc, animated: true, completion: nil)
-                
-                decisionHandler(.cancel)
-                return
-            }
-            
-            if WKWebView.handlesURLScheme(scheme) {
-                decisionHandler(.allow)
-                return
-            }
+        decisionHandler(.allowWithoutTryingAppLink)
+        return true
+    }
+    
+    private func allowWebViewHandledSchemeIfNeeded(
+        _ url: URL,
+        decisionHandler: (WKNavigationActionPolicy) -> Void
+    ) -> Bool {
+        guard
+            let scheme = url.scheme?.lowercased(),
+            WKWebView.handlesURLScheme(scheme)
+        else {
+            return false
         }
-        
-        UIApplication.shared.open(url) { (success) in
+
+        decisionHandler(.allow)
+        return true
+    }
+    
+    private func openExternalURL(
+        _ url: URL,
+        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+    ) {
+        UIApplication.shared.open(url) { success in
             if !success {
                 debugPrint("WKDemo openURL failed url: \(url)")
             }
+
             decisionHandler(.cancel)
         }
     }
     
+    private func presentActivityMessage(title: String) {
+        let dialog = UIAlertController(
+            title: title,
+            message: nil,
+            preferredStyle: .alert
+        )
+
+        dialog.addAction(
+            UIAlertAction(
+                title: "OK",
+                style: .default
+            )
+        )
+
+        dialog.addAction(
+            UIAlertAction(
+                title: "Cancel",
+                style: .cancel
+            )
+        )
+
+        present(dialog, animated: true)
+    }
+    
+    private func handleDataURLIfNeeded(
+        _ url: URL,
+        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+    ) -> Bool {
+        guard
+            let mimeType = DataURLSupport.mimeType(of: url),
+            let pathExtension = MIMETypeSupport.preferredPathExtension(mimeType: mimeType),
+            let data = try? Data(contentsOf: url)
+        else {
+            return false
+        }
+
+        let tempFile = TemporaryFile(pathExtension: pathExtension as String)
+
+        do {
+            try data.write(to: tempFile.url, options: .atomic)
+        } catch {
+            print(error)
+            decisionHandler(.cancel)
+            return true
+        }
+
+        let activityViewController = UIActivityViewController.Builder(file: tempFile)
+            .setSourceRect(
+                CGRect(origin: touchLocation, size: .zero),
+                in: containerView
+            )
+            .setCompletionHandler { [weak self] message in
+                switch message {
+                case .present(let title):
+                    self?.presentActivityMessage(title: title)
+
+                case .none:
+                    break
+                }
+            }
+            .setErrorHandler { error in
+                print(error)
+            }
+            .build()
+
+        present(activityViewController, animated: true)
+        decisionHandler(.cancel)
+        return true
+    }
+    
+    private func decidePolicy(
+        for navigationAction: WKNavigationAction,
+        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+    ) {
+        guard let url = navigationAction.request.url else {
+            assertionFailure("navigationAction.request.url is nil")
+            decisionHandler(.cancel)
+            return
+        }
+
+        if allowHTTPNavigationIfNeeded(url, decisionHandler: decisionHandler) {
+            return
+        }
+
+        if handleDataURLIfNeeded(url, decisionHandler: decisionHandler) {
+            return
+        }
+
+        if allowWebViewHandledSchemeIfNeeded(url, decisionHandler: decisionHandler) {
+            return
+        }
+
+        openExternalURL(url, decisionHandler: decisionHandler)
+    }
     private func presentShareSheet(_ url: URL) {
         let vc = UIActivityViewController(
             activityItems: [url],
@@ -488,5 +552,16 @@ extension ContentPageViewController: UIContextMenuInteractionDelegate {
                 safariAction
             ])
         }
+    }
+}
+
+private extension WKNavigationActionPolicy {
+    static var allowWithoutTryingAppLink: WKNavigationActionPolicy {
+        let policy = WKNavigationActionPolicy(
+            rawValue: WKNavigationActionPolicy.allow.rawValue + 2
+        )
+
+        assert(policy != nil)
+        return policy ?? .allow
     }
 }

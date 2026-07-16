@@ -17,4 +17,11 @@ extension URL {
         }
         return host
     }
+    
+    var isHTTPOrHTTPS: Bool {
+        guard let scheme = scheme?.lowercased() else {
+            return false
+        }
+        return scheme == "http" || scheme == "https"
+    }
 }
