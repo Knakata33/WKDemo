@@ -31,9 +31,12 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private var isURLBarCompact = false
     private var lastContentOffsetY: CGFloat = 0
     private var isLoadingObservation: NSKeyValueObservation?
+    private let websiteDataStore: any AppWebsiteDataStoreProtocol
+    private var isCleaningUpWebsiteData = false
     
-    init(url: URL) {
+    init(url: URL, websiteDataStore: any AppWebsiteDataStoreProtocol = AppWebsiteDataStore()) {
         self.url = url
+        self.websiteDataStore = websiteDataStore
         super.init(nibName: "ContentPageViewController", bundle: nil)
     }
     
@@ -57,7 +60,6 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         if #available(iOS 18.0, *) {
             configuration.writingToolsBehavior = .none
         }
-        configuration.websiteDataStore = .nonPersistent()
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
         return configuration
@@ -225,6 +227,19 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    @MainActor
+    private func cleanUpWebsiteDataIfNeeded() async {
+        guard !isCleaningUpWebsiteData else { return }
+        
+        isCleaningUpWebsiteData = true
+        defer {
+            isCleaningUpWebsiteData = false
+        }
+        
+        webView?.stopLoading()
+        await websiteDataStore.cleanUp()
+    }
+    
     @IBAction func urlTextFieldDidEndOnExit(_ sender: UITextField) {
         sender.resignFirstResponder()
         
@@ -248,7 +263,12 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func bottomBarCloseButtonTouchUpInside(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            
+            await self.cleanUpWebsiteDataIfNeeded()
+            self.dismiss(animated: true)
+        }
     }
 }
 
