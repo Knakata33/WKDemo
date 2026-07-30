@@ -60,6 +60,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         if #available(iOS 18.0, *) {
             configuration.writingToolsBehavior = .none
         }
+        configuration.websiteDataStore = .default()
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
         return configuration
@@ -263,10 +264,16 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func bottomBarCloseButtonTouchUpInside(_ sender: Any) {
+        guard !isCleaningUpWebsiteData else { return }
+        
+        isCleaningUpWebsiteData = true
+        closeButton.isEnabled = false
+        
         Task { @MainActor [weak self] in
             guard let self else { return }
             
-            await self.cleanUpWebsiteDataIfNeeded()
+            self.webView.stopLoading()
+            await self.websiteDataStore.cleanUp()
             self.dismiss(animated: true)
         }
     }
