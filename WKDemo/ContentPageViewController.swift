@@ -32,7 +32,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private var lastContentOffsetY: CGFloat = 0
     private var isLoadingObservation: NSKeyValueObservation?
     private let websiteDataStore: any AppWebsiteDataStoreProtocol
-    private var isCleaningUpWebsiteData = false
+    private var isClosing = false
     
     init(url: URL, websiteDataStore: any AppWebsiteDataStoreProtocol = AppWebsiteDataStore()) {
         self.url = url
@@ -228,19 +228,6 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @MainActor
-    private func cleanUpWebsiteDataIfNeeded() async {
-        guard !isCleaningUpWebsiteData else { return }
-        
-        isCleaningUpWebsiteData = true
-        defer {
-            isCleaningUpWebsiteData = false
-        }
-        
-        webView?.stopLoading()
-        await websiteDataStore.cleanUp()
-    }
-    
     @IBAction func urlTextFieldDidEndOnExit(_ sender: UITextField) {
         sender.resignFirstResponder()
         
@@ -264,9 +251,9 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func bottomBarCloseButtonTouchUpInside(_ sender: Any) {
-        guard !isCleaningUpWebsiteData else { return }
+        guard !isClosing else { return }
         
-        isCleaningUpWebsiteData = true
+        isClosing = true
         closeButton.isEnabled = false
         
         Task { @MainActor [weak self] in
