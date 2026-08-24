@@ -33,7 +33,9 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private var isLoadingObservation: NSKeyValueObservation?
     private let websiteDataStore: any AppWebsiteDataStoreProtocol
     private var isClosing = false
-    private static let customMessageHandlerName = "loilonoteQuizMessageHandler"
+    
+    // WKScriptMessageHandlerの名前は送信側で使用している名前に合わせて変更してください
+    private static let customMessageHandlerName = "appMessageHandler"
     private static let interFrameMessageProtocol = 1
 
     private enum ScriptCommand: String {
