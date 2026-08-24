@@ -33,6 +33,14 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private var isLoadingObservation: NSKeyValueObservation?
     private let websiteDataStore: any AppWebsiteDataStoreProtocol
     private var isClosing = false
+    private static let customMessageHandlerName = "loilonoteQuizMessageHandler"
+    private static let interFrameMessageProtocol = 1
+
+    private enum ScriptCommand: String {
+        case handshakeRequest = "handshake-request"
+        case handshakeResponse = "handshake-response"
+        case downloadFile = "download-file"
+    }
     
     init(url: URL, websiteDataStore: any AppWebsiteDataStoreProtocol = AppWebsiteDataStore()) {
         self.url = url
@@ -63,6 +71,12 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         configuration.websiteDataStore = .default()
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
+        let scriptMessageHandler = ContentPageScriptMessageHandler()
+            scriptMessageHandler.delegate = self
+            configuration.userContentController.add(
+                scriptMessageHandler,
+                name: Self.customMessageHandlerName
+            )
         return configuration
     }
     
@@ -438,6 +452,17 @@ extension ContentPageViewController: WKNavigationDelegate {
         present(vc, animated: true)
     }
     
+    private func sendHandshakeResponse() async throws {
+        _ = try await webView.evaluateJavaScript("""
+        window.postMessage({
+            "version": \(Self.interFrameMessageProtocol),
+            "command": "\(ScriptCommand.handshakeResponse.rawValue)",
+            "capabilities": ["\(ScriptCommand.downloadFile.rawValue)"]
+        });
+        0;
+        """)
+    }
+    
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
         debugPrint("ViewController decidePolicy url: \(String(describing: navigationAction.request.url)), preferredContentMode: \(preferences.preferredContentMode.rawValue)")        
         decidePolicy(for: navigationAction) { (policy) in
@@ -577,5 +602,146 @@ private extension WKNavigationActionPolicy {
 
         assert(policy != nil)
         return policy ?? .allow
+    }
+}
+
+extension ContentPageViewController:
+    ContentPageScriptMessageHandlerDelegate
+{
+    private func makeTemporaryDownloadFile(
+        fileName: String,
+        data: Data
+    ) throws -> URL {
+        // "../foo" 等を除去してファイル名部分だけにする
+        let safeFileName = URL(
+            fileURLWithPath: fileName
+        ).lastPathComponent
+
+        guard !safeFileName.isEmpty else {
+            throw CocoaError(.fileWriteInvalidFileName)
+        }
+
+        // ファイル同士の衝突を避けるため、専用ディレクトリを作る
+        let directoryURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+
+        try FileManager.default.createDirectory(
+            at: directoryURL,
+            withIntermediateDirectories: true
+        )
+
+        let fileURL = directoryURL
+            .appendingPathComponent(safeFileName)
+
+        try data.write(
+            to: fileURL,
+            options: .atomic
+        )
+
+        return fileURL
+    }
+    
+    private func presentDownloadedFile(_ fileURL: URL) {
+        let activityViewController = UIActivityViewController(
+            activityItems: [fileURL],
+            applicationActivities: nil
+        )
+
+        activityViewController.popoverPresentationController?.sourceView =
+            containerView
+
+        activityViewController.popoverPresentationController?.sourceRect =
+            CGRect(
+                origin: touchLocation,
+                size: .zero
+            )
+
+        present(
+            activityViewController,
+            animated: true
+        )
+    }
+    
+    private func handleDownloadFileMessage(
+        _ body: [String: Any]
+    ) {
+        guard
+            let fileName = body["fileName"] as? String,
+            let dataURLString = body["dataUrl"] as? String,
+            let dataURL = URL(string: dataURLString),
+            DataURLSupport.mimeType(of: dataURL) != nil,
+            let data = try? Data(contentsOf: dataURL)
+        else {
+            return
+        }
+
+        do {
+            let fileURL = try makeTemporaryDownloadFile(
+                fileName: fileName,
+                data: data
+            )
+
+            presentDownloadedFile(fileURL)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func contentPageScriptMessageHandlerDidReceiveMessage(
+        _ message: WKScriptMessage
+    ) {
+        guard message.name == Self.customMessageHandlerName else {
+            return
+        }
+
+        guard
+            let body = message.body as? [String: Any],
+            let version = body["version"] as? Int,
+            version == Self.interFrameMessageProtocol,
+            let commandString = body["command"] as? String,
+            let command = ScriptCommand(rawValue: commandString)
+        else {
+            return
+        }
+
+        switch command {
+        case .handshakeRequest:
+            Task {
+                do {
+                    try await sendHandshakeResponse()
+                } catch {
+                    print(error)
+                }
+            }
+
+        case .downloadFile:
+            handleDownloadFileMessage(body)
+
+        case .handshakeResponse:
+            break
+        }
+    }
+}
+
+@MainActor
+private protocol ContentPageScriptMessageHandlerDelegate: AnyObject {
+    func contentPageScriptMessageHandlerDidReceiveMessage(
+        _ message: WKScriptMessage
+    )
+}
+
+private final class ContentPageScriptMessageHandler:
+    NSObject,
+    WKScriptMessageHandler
+{
+    weak var delegate: ContentPageScriptMessageHandlerDelegate?
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
+        Task { @MainActor [weak self] in
+            self?.delegate?
+                .contentPageScriptMessageHandlerDidReceiveMessage(message)
+        }
     }
 }
