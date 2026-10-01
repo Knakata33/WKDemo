@@ -44,6 +44,10 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         case downloadFile = "download-file"
     }
     
+    private enum ScriptCapability: String {
+        case downloadFile = "download-file"
+    }
+    
     init(url: URL, websiteDataStore: any AppWebsiteDataStoreProtocol = AppWebsiteDataStore()) {
         self.url = url
         self.websiteDataStore = websiteDataStore
@@ -459,7 +463,7 @@ extension ContentPageViewController: WKNavigationDelegate {
         window.postMessage({
             "version": \(Self.interFrameMessageProtocol),
             "command": "\(ScriptCommand.handshakeResponse.rawValue)",
-            "capabilities": ["\(ScriptCommand.downloadFile.rawValue)"]
+            "capabilities": ["\(ScriptCapability.downloadFile.rawValue)"]
         });
         0;
         """)
