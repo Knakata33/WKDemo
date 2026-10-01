@@ -37,12 +37,18 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     // WKScriptMessageHandlerの名前は送信側で使用している名前に合わせて変更してください
     private static let customMessageHandlerName = "appMessageHandler"
     private static let interFrameMessageProtocol = 1
-
+    
     private enum ScriptCommand: String {
         case handshakeRequest = "handshake-request"
         case handshakeResponse = "handshake-response"
         case downloadFile = "download-file"
     }
+    
+    private enum ScriptCapability: String {
+        case downloadFile = "download-file"
+    }
+    
+    private var downloadedFile: FileProtocol?
     
     init(url: URL, websiteDataStore: any AppWebsiteDataStoreProtocol = AppWebsiteDataStore()) {
         self.url = url
@@ -74,11 +80,11 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
         let scriptMessageHandler = ContentPageScriptMessageHandler()
-            scriptMessageHandler.delegate = self
-            configuration.userContentController.add(
-                scriptMessageHandler,
-                name: Self.customMessageHandlerName
-            )
+        scriptMessageHandler.delegate = self
+        configuration.userContentController.add(
+            scriptMessageHandler,
+            name: Self.customMessageHandlerName
+        )
         return configuration
     }
     
@@ -236,7 +242,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private func observeWebViewLoadingState() {
         isLoadingObservation = webView.observe(
             \.isLoading,
-            options: [.initial, .new]
+             options: [.initial, .new]
         ) { [weak self] webView, _ in
             DispatchQueue.main.async {
                 self?.updateReloadButton(isLoading: webView.isLoading)
@@ -331,10 +337,10 @@ extension ContentPageViewController: WKNavigationDelegate {
         guard
             let scheme = url.scheme?.lowercased(),
             WKWebView.handlesURLScheme(scheme)
-        else {
+                else {
             return false
         }
-
+        
         decisionHandler(.allow)
         return true
     }
@@ -347,7 +353,7 @@ extension ContentPageViewController: WKNavigationDelegate {
             if !success {
                 debugPrint("WKDemo openURL failed url: \(url)")
             }
-
+            
             decisionHandler(.cancel)
         }
     }
@@ -358,21 +364,21 @@ extension ContentPageViewController: WKNavigationDelegate {
             message: nil,
             preferredStyle: .alert
         )
-
+        
         dialog.addAction(
             UIAlertAction(
                 title: "OK",
                 style: .default
             )
         )
-
+        
         dialog.addAction(
             UIAlertAction(
                 title: "Cancel",
                 style: .cancel
             )
         )
-
+        
         present(dialog, animated: true)
     }
     
@@ -384,12 +390,12 @@ extension ContentPageViewController: WKNavigationDelegate {
             let mimeType = DataURLSupport.mimeType(of: url),
             let pathExtension = MIMETypeSupport.preferredPathExtension(mimeType: mimeType),
             let data = try? Data(contentsOf: url)
-        else {
+                else {
             return false
         }
-
+        
         let tempFile = TemporaryFile(pathExtension: pathExtension as String)
-
+        
         do {
             try data.write(to: tempFile.url, options: .atomic)
         } catch {
@@ -397,7 +403,7 @@ extension ContentPageViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return true
         }
-
+        
         let activityViewController = UIActivityViewController.Builder(file: tempFile)
             .setSourceRect(
                 CGRect(origin: touchLocation, size: .zero),
@@ -407,7 +413,7 @@ extension ContentPageViewController: WKNavigationDelegate {
                 switch message {
                 case .present(let title):
                     self?.presentActivityMessage(title: title)
-
+                    
                 case .none:
                     break
                 }
@@ -416,7 +422,7 @@ extension ContentPageViewController: WKNavigationDelegate {
                 print(error)
             }
             .build()
-
+        
         present(activityViewController, animated: true)
         decisionHandler(.cancel)
         return true
@@ -431,19 +437,19 @@ extension ContentPageViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         }
-
+        
         if allowHTTPNavigationIfNeeded(url, decisionHandler: decisionHandler) {
             return
         }
-
+        
         if handleDataURLIfNeeded(url, decisionHandler: decisionHandler) {
             return
         }
-
+        
         if allowWebViewHandledSchemeIfNeeded(url, decisionHandler: decisionHandler) {
             return
         }
-
+        
         openExternalURL(url, decisionHandler: decisionHandler)
     }
     private func presentShareSheet(_ url: URL) {
@@ -459,14 +465,14 @@ extension ContentPageViewController: WKNavigationDelegate {
         window.postMessage({
             "version": \(Self.interFrameMessageProtocol),
             "command": "\(ScriptCommand.handshakeResponse.rawValue)",
-            "capabilities": ["\(ScriptCommand.downloadFile.rawValue)"]
+            "capabilities": ["\(ScriptCapability.downloadFile.rawValue)"]
         });
         0;
         """)
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
-        debugPrint("ViewController decidePolicy url: \(String(describing: navigationAction.request.url)), preferredContentMode: \(preferences.preferredContentMode.rawValue)")        
+        debugPrint("ViewController decidePolicy url: \(String(describing: navigationAction.request.url)), preferredContentMode: \(preferences.preferredContentMode.rawValue)")
         decidePolicy(for: navigationAction) { (policy) in
             decisionHandler(policy, preferences)
         }
@@ -481,7 +487,7 @@ extension ContentPageViewController: WKUIDelegate {
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         guard let url = navigationAction.request.url, let scheme = url.scheme?.lowercased(),
               scheme == "https" || scheme == "http"
-        else {
+                else {
             return nil
         }
         UIApplication.shared.open(url) { success in
@@ -601,7 +607,6 @@ private extension WKNavigationActionPolicy {
         let policy = WKNavigationActionPolicy(
             rawValue: WKNavigationActionPolicy.allow.rawValue + 2
         )
-
         assert(policy != nil)
         return policy ?? .allow
     }
@@ -610,40 +615,42 @@ private extension WKNavigationActionPolicy {
 extension ContentPageViewController:
     ContentPageScriptMessageHandlerDelegate
 {
-    private func makeTemporaryDownloadFile(
+    private func makeDownloadedFile(
         fileName: String,
         data: Data
-    ) throws -> URL {
-        // "../foo" 等を除去してファイル名部分だけにする
+    ) throws -> FileWithTemporaryDirectory {
         let safeFileName = URL(
             fileURLWithPath: fileName
         ).lastPathComponent
-
-        guard !safeFileName.isEmpty else {
+        guard
+            !safeFileName.isEmpty,
+            safeFileName != ".",
+            safeFileName != ".."
+        else {
             throw CocoaError(.fileWriteInvalidFileName)
         }
-
-        // ファイル同士の衝突を避けるため、専用ディレクトリを作る
-        let directoryURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent(UUID().uuidString, isDirectory: true)
-
-        try FileManager.default.createDirectory(
-            at: directoryURL,
-            withIntermediateDirectories: true
+        let file = FileWithTemporaryDirectory.makeFile(
+            nameAs: safeFileName
         )
-
-        let fileURL = directoryURL
-            .appendingPathComponent(safeFileName)
-
+        guard let fileURL = file.url else {
+            throw CocoaError(.fileWriteUnknown)
+        }
         try data.write(
             to: fileURL,
             options: .atomic
         )
-
-        return fileURL
+        return file
     }
     
-    private func presentDownloadedFile(_ fileURL: URL) {
+    private func presentDownloadedFile(
+        _ file: FileProtocol
+    ) {
+        guard let fileURL = file.url else {
+            return
+        }
+        // UIActivityViewControllerを閉じるまで一時ファイルを保持する
+        downloadedFile = file
+
         let activityViewController = UIActivityViewController(
             activityItems: [fileURL],
             applicationActivities: nil
@@ -658,6 +665,13 @@ extension ContentPageViewController:
                 size: .zero
             )
 
+        activityViewController.completionWithItemsHandler = {
+            [weak self] _, _, _, _ in
+            // FileWithTemporaryDirectoryが解放され、
+            // TemporaryFileのdeinitで一時ディレクトリごと削除される
+            self?.downloadedFile = nil
+        }
+
         present(
             activityViewController,
             animated: true
@@ -671,19 +685,18 @@ extension ContentPageViewController:
             let fileName = body["fileName"] as? String,
             let dataURLString = body["dataUrl"] as? String,
             let dataURL = URL(string: dataURLString),
-            DataURLSupport.mimeType(of: dataURL) != nil,
-            let data = try? Data(contentsOf: dataURL)
-        else {
+            DataURLSupport.mimeType(of: dataURL) != nil
+                else {
             return
         }
-
         do {
-            let fileURL = try makeTemporaryDownloadFile(
+            let data = try Data(contentsOf: dataURL)
+            
+            let file = try makeDownloadedFile(
                 fileName: fileName,
                 data: data
             )
-
-            presentDownloadedFile(fileURL)
+            presentDownloadedFile(file)
         } catch {
             print(error)
         }
@@ -695,17 +708,17 @@ extension ContentPageViewController:
         guard message.name == Self.customMessageHandlerName else {
             return
         }
-
+        
         guard
             let body = message.body as? [String: Any],
             let version = body["version"] as? Int,
             version == Self.interFrameMessageProtocol,
             let commandString = body["command"] as? String,
             let command = ScriptCommand(rawValue: commandString)
-        else {
+                else {
             return
         }
-
+        
         switch command {
         case .handshakeRequest:
             Task {
@@ -715,10 +728,10 @@ extension ContentPageViewController:
                     print(error)
                 }
             }
-
+            
         case .downloadFile:
             handleDownloadFileMessage(body)
-
+            
         case .handshakeResponse:
             break
         }
