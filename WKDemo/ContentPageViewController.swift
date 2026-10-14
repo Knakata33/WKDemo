@@ -15,7 +15,6 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var bottomBarHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var reloadButton: UIButton!
     @IBOutlet weak var reloadButtonWidthConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var urlTextField: UITextField!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var closeButtonWidthConstraint: NSLayoutConstraint!
@@ -24,7 +23,6 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var contentViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
-    
     private var webView: WKWebView!
     private var touchLocation: CGPoint = .zero
     private let url: URL
@@ -41,14 +39,13 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private enum ScriptCommand: String {
         case handshakeRequest = "handshake-request"
         case handshakeResponse = "handshake-response"
+        case ready = "ready"
         case downloadFile = "download-file"
     }
     
     private enum ScriptCapability: String {
         case downloadFile = "download-file"
     }
-    
-    private var downloadedFile: FileProtocol?
     
     init(url: URL, websiteDataStore: any AppWebsiteDataStoreProtocol = AppWebsiteDataStore()) {
         self.url = url
@@ -249,15 +246,110 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
+
+    private func presentActivityMessage(
+        title: String
+    ) {
+        let dialog = UIAlertController(
+            title: title,
+            message: nil,
+            preferredStyle: .alert
+        )
+        dialog.addAction(
+            UIAlertAction(
+                title: "OK",
+                style: .default
+            )
+        )
+        dialog.addAction(
+            UIAlertAction(
+                title: "Cancel",
+                style: .cancel
+            )
+        )
+        present(
+            dialog,
+            animated: true
+        )
+    }
     
-    @IBAction func urlTextFieldDidEndOnExit(_ sender: UITextField) {
-        sender.resignFirstResponder()
+    private func presentDownloadedFile(
+        _ file: FileProtocol
+    ) {
+        let activityViewController = UIActivityViewController.Builder(file: file)
+            .setSourceRect(
+                CGRect(origin: touchLocation, size: .zero), in: containerView)
+            .setCompletionHandler { [weak self] message in
+                switch message {
+                case .present(let title):
+                    self?.presentActivityMessage(title: title)
+                case .none:
+                    break
+                }
+            }
+            .setErrorHandler { error in
+                print(error)
+            }
+            .build()
+
+        present(activityViewController, animated: true)
+    }
+
+    private func sendHandshakeResponse() async throws {
+        _ = try await webView.evaluateJavaScript("""
+        window.postMessage({
+            "version": \(Self.interFrameMessageProtocol),
+            "command": "\(ScriptCommand.handshakeResponse.rawValue)",
+            "capabilities": ["\(ScriptCapability.downloadFile.rawValue)"]
+        });
+        0;
+        """)
+    }
+    
+    private func makeDownloadedFile(fileName: String, data: Data) throws -> FileWithTemporaryDirectory {
+        let safeFileName = URL(fileURLWithPath: fileName).lastPathComponent
+        guard
+            !safeFileName.isEmpty,
+            safeFileName != ".",
+            safeFileName != ".."
+        else {
+            throw CocoaError(.fileWriteInvalidFileName)
+        }
+
+        let file = FileWithTemporaryDirectory.makeFile(nameAs: safeFileName)
+        guard let fileURL = file.url else {
+            throw CocoaError(.fileWriteUnknown)
+        }
         
+        try data.write(to: fileURL, options: .atomic)
+        return file
+    }
+    
+    private func handleDownloadFileMessage(_ body: [String: Any]) {
+        guard let fileName = body["fileName"] as? String,
+              let dataURLString = body["dataUrl"] as? String,
+              let dataURL = URL(string: dataURLString),
+              DataURLSupport.mimeType(of: dataURL) != nil else {
+            return
+        }
+        
+        do {
+            let data = try Data(contentsOf: dataURL)
+            let file = try makeDownloadedFile(fileName: fileName, data: data)
+            presentDownloadedFile(file)
+        } catch {
+            print(error)
+        }
+    }
+
+    @IBAction func urlTextFieldDidEndOnExit(
+        _ sender: UITextField
+    ) {
+        sender.resignFirstResponder()
         guard let input = sender.text,
               let url = WebNavigationResolver.resolve(from: input) else {
             return
         }
-        
         webView.load(URLRequest(url: url))
     }
     
@@ -357,31 +449,7 @@ extension ContentPageViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
         }
     }
-    
-    private func presentActivityMessage(title: String) {
-        let dialog = UIAlertController(
-            title: title,
-            message: nil,
-            preferredStyle: .alert
-        )
-        
-        dialog.addAction(
-            UIAlertAction(
-                title: "OK",
-                style: .default
-            )
-        )
-        
-        dialog.addAction(
-            UIAlertAction(
-                title: "Cancel",
-                style: .cancel
-            )
-        )
-        
-        present(dialog, animated: true)
-    }
-    
+
     private func handleDataURLIfNeeded(
         _ url: URL,
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
@@ -403,27 +471,9 @@ extension ContentPageViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return true
         }
-        
-        let activityViewController = UIActivityViewController.Builder(file: tempFile)
-            .setSourceRect(
-                CGRect(origin: touchLocation, size: .zero),
-                in: containerView
-            )
-            .setCompletionHandler { [weak self] message in
-                switch message {
-                case .present(let title):
-                    self?.presentActivityMessage(title: title)
-                    
-                case .none:
-                    break
-                }
-            }
-            .setErrorHandler { error in
-                print(error)
-            }
-            .build()
-        
-        present(activityViewController, animated: true)
+
+        presentDownloadedFile(tempFile)
+
         decisionHandler(.cancel)
         return true
     }
@@ -449,26 +499,26 @@ extension ContentPageViewController: WKNavigationDelegate {
         if allowWebViewHandledSchemeIfNeeded(url, decisionHandler: decisionHandler) {
             return
         }
-        
-        openExternalURL(url, decisionHandler: decisionHandler)
-    }
-    private func presentShareSheet(_ url: URL) {
-        let vc = UIActivityViewController(
-            activityItems: [url],
-            applicationActivities: nil
+
+        openExternalURL(
+            url,
+            decisionHandler: decisionHandler
         )
-        present(vc, animated: true)
     }
-    
-    private func sendHandshakeResponse() async throws {
-        _ = try await webView.evaluateJavaScript("""
-        window.postMessage({
-            "version": \(Self.interFrameMessageProtocol),
-            "command": "\(ScriptCommand.handshakeResponse.rawValue)",
-            "capabilities": ["\(ScriptCapability.downloadFile.rawValue)"]
-        });
-        0;
-        """)
+
+    private func presentShareSheet(
+        _ url: URL
+    ) {
+        let viewController =
+            UIActivityViewController(
+                activityItems: [url],
+                applicationActivities: nil
+            )
+
+        present(
+            viewController,
+            animated: true
+        )
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
@@ -615,100 +665,12 @@ private extension WKNavigationActionPolicy {
 extension ContentPageViewController:
     ContentPageScriptMessageHandlerDelegate
 {
-    private func makeDownloadedFile(
-        fileName: String,
-        data: Data
-    ) throws -> FileWithTemporaryDirectory {
-        let safeFileName = URL(
-            fileURLWithPath: fileName
-        ).lastPathComponent
-        guard
-            !safeFileName.isEmpty,
-            safeFileName != ".",
-            safeFileName != ".."
-        else {
-            throw CocoaError(.fileWriteInvalidFileName)
-        }
-        let file = FileWithTemporaryDirectory.makeFile(
-            nameAs: safeFileName
-        )
-        guard let fileURL = file.url else {
-            throw CocoaError(.fileWriteUnknown)
-        }
-        try data.write(
-            to: fileURL,
-            options: .atomic
-        )
-        return file
-    }
-    
-    private func presentDownloadedFile(
-        _ file: FileProtocol
-    ) {
-        guard let fileURL = file.url else {
-            return
-        }
-        // UIActivityViewControllerを閉じるまで一時ファイルを保持する
-        downloadedFile = file
-
-        let activityViewController = UIActivityViewController(
-            activityItems: [fileURL],
-            applicationActivities: nil
-        )
-
-        activityViewController.popoverPresentationController?.sourceView =
-            containerView
-
-        activityViewController.popoverPresentationController?.sourceRect =
-            CGRect(
-                origin: touchLocation,
-                size: .zero
-            )
-
-        activityViewController.completionWithItemsHandler = {
-            [weak self] _, _, _, _ in
-            // FileWithTemporaryDirectoryが解放され、
-            // TemporaryFileのdeinitで一時ディレクトリごと削除される
-            self?.downloadedFile = nil
-        }
-
-        present(
-            activityViewController,
-            animated: true
-        )
-    }
-    
-    private func handleDownloadFileMessage(
-        _ body: [String: Any]
-    ) {
-        guard
-            let fileName = body["fileName"] as? String,
-            let dataURLString = body["dataUrl"] as? String,
-            let dataURL = URL(string: dataURLString),
-            DataURLSupport.mimeType(of: dataURL) != nil
-                else {
-            return
-        }
-        do {
-            let data = try Data(contentsOf: dataURL)
-            
-            let file = try makeDownloadedFile(
-                fileName: fileName,
-                data: data
-            )
-            presentDownloadedFile(file)
-        } catch {
-            print(error)
-        }
-    }
-    
     func contentPageScriptMessageHandlerDidReceiveMessage(
         _ message: WKScriptMessage
     ) {
         guard message.name == Self.customMessageHandlerName else {
             return
         }
-        
         guard
             let body = message.body as? [String: Any],
             let version = body["version"] as? Int,
@@ -728,11 +690,10 @@ extension ContentPageViewController:
                     print(error)
                 }
             }
-            
         case .downloadFile:
             handleDownloadFileMessage(body)
-            
-        case .handshakeResponse:
+        case .ready,
+             .handshakeResponse:
             break
         }
     }
@@ -754,9 +715,7 @@ private final class ContentPageScriptMessageHandler:
         _ userContentController: WKUserContentController,
         didReceive message: WKScriptMessage
     ) {
-        Task { @MainActor [weak self] in
-            self?.delegate?
-                .contentPageScriptMessageHandlerDidReceiveMessage(message)
-        }
+        delegate?
+            .contentPageScriptMessageHandlerDidReceiveMessage(message)
     }
 }
