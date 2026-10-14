@@ -627,7 +627,7 @@ extension ContentPageViewController:
             !safeFileName.isEmpty,
             safeFileName != ".",
             safeFileName != ".."
-        else {
+                else {
             throw CocoaError(.fileWriteInvalidFileName)
         }
         let file = FileWithTemporaryDirectory.makeFile(
@@ -651,28 +651,28 @@ extension ContentPageViewController:
         }
         // UIActivityViewControllerを閉じるまで一時ファイルを保持する
         downloadedFile = file
-
+        
         let activityViewController = UIActivityViewController(
             activityItems: [fileURL],
             applicationActivities: nil
         )
-
+        
         activityViewController.popoverPresentationController?.sourceView =
-            containerView
-
+        containerView
+        
         activityViewController.popoverPresentationController?.sourceRect =
-            CGRect(
-                origin: touchLocation,
-                size: .zero
-            )
-
+        CGRect(
+            origin: touchLocation,
+            size: .zero
+        )
+        
         activityViewController.completionWithItemsHandler = {
             [weak self] _, _, _, _ in
             // FileWithTemporaryDirectoryが解放され、
             // TemporaryFileのdeinitで一時ディレクトリごと削除される
             self?.downloadedFile = nil
         }
-
+        
         present(
             activityViewController,
             animated: true
@@ -729,11 +729,11 @@ extension ContentPageViewController:
                     print(error)
                 }
             }
-            
         case .downloadFile:
             handleDownloadFileMessage(body)
-            
         case .handshakeResponse:
+            break
+        case .ready
             break
         }
     }
@@ -755,9 +755,7 @@ private final class ContentPageScriptMessageHandler:
         _ userContentController: WKUserContentController,
         didReceive message: WKScriptMessage
     ) {
-        Task { @MainActor [weak self] in
-            self?.delegate?
-                .contentPageScriptMessageHandlerDidReceiveMessage(message)
-        }
+        delegate?
+            .contentPageScriptMessageHandlerDidReceiveMessage(message)
     }
 }
