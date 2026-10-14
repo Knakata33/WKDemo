@@ -41,6 +41,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private enum ScriptCommand: String {
         case handshakeRequest = "handshake-request"
         case handshakeResponse = "handshake-response"
+        case ready = "ready"
         case downloadFile = "download-file"
     }
     
