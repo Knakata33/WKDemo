@@ -302,7 +302,6 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
             "command": "\(ScriptCommand.handshakeResponse.rawValue)",
             "capabilities": ["\(ScriptCapability.downloadFile.rawValue)"]
         });
-        0;
         """)
     }
     
