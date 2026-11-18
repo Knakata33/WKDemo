@@ -26,6 +26,7 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     private var webView: WKWebView!
     private var touchLocation: CGPoint = .zero
     private let url: URL
+    private let scriptMessageOrigin: ScriptMessageOrigin?
     private var isURLBarCompact = false
     private var lastContentOffsetY: CGFloat = 0
     private var isLoadingObservation: NSKeyValueObservation?
@@ -47,8 +48,54 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         case downloadFile = "download-file"
     }
     
+    private struct ScriptMessageOrigin: Equatable {
+        let scheme: String
+        let host: String
+        let port: Int
+        init?(url: URL) {
+            guard
+                let scheme = url.scheme?.lowercased(),
+                let host = url.host?.lowercased()
+            else {
+                return nil
+            }
+            self.scheme = scheme
+            self.host = host
+            self.port = Self.normalizedPort(
+                scheme: scheme,
+                port: url.port
+            )
+        }
+        
+        init(_ origin: WKSecurityOrigin) {
+            let scheme = origin.protocol.lowercased()
+            
+            self.scheme = scheme
+            self.host = origin.host.lowercased()
+            self.port = Self.normalizedPort(
+                scheme: scheme,
+                port: origin.port
+            )
+        }
+        
+        private static func normalizedPort(
+            scheme: String,
+            port: Int?
+        ) -> Int {
+            let port = port ?? 0
+            if scheme == "https", port == 0 || port == 443 {
+                return 443
+            }
+            if scheme == "http", port == 0 || port == 80 {
+                return 80
+            }
+            return port
+        }
+    }
+    
     init(url: URL, websiteDataStore: any AppWebsiteDataStoreProtocol = AppWebsiteDataStore()) {
         self.url = url
+        self.scriptMessageOrigin = ScriptMessageOrigin(url: url)
         self.websiteDataStore = websiteDataStore
         super.init(nibName: "ContentPageViewController", bundle: nil)
     }
@@ -670,6 +717,16 @@ extension ContentPageViewController:
         guard message.name == Self.customMessageHandlerName else {
             return
         }
+        
+        guard
+            message.frameInfo.isMainFrame,
+            let scriptMessageOrigin,
+            ScriptMessageOrigin(message.frameInfo.securityOrigin)
+                == scriptMessageOrigin
+                else {
+            return
+        }
+        
         guard
             let body = message.body as? [String: Any],
             let version = body["version"] as? Int,
