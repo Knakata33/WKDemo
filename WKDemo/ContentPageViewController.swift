@@ -411,11 +411,13 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     @IBAction func urlTextFieldDidEndOnExit(
         _ sender: UITextField
     ) {
-        sender.resignFirstResponder()
-        guard let input = sender.text,
-              let url = WebNavigationResolver.resolve(from: input) else {
+        guard
+            let input = sender.text,
+            let url = WebNavigationResolver.resolve(from: input)
+        else {
             return
         }
+        sender.resignFirstResponder()
         webView.load(URLRequest(url: url))
     }
     
