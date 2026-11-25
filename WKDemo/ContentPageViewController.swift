@@ -36,11 +36,14 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     // WKScriptMessageHandlerの名前は送信側で使用している名前に合わせて変更してください
     private static let customMessageHandlerName = "appMessageHandler"
     private static let interFrameMessageProtocol = 1
+    private var isGracefulShutdownEnabled = false
     
     private enum ScriptCommand: String {
         case handshakeRequest = "handshake-request"
         case handshakeResponse = "handshake-response"
         case ready = "ready"
+        case willUnmount = "will-unmount"
+        case uploadCompleted = "upload-completed"
         case downloadFile = "download-file"
     }
     
@@ -352,6 +355,17 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         """)
     }
     
+    private func sendCommand(
+        _ command: ScriptCommand
+    ) async throws {
+        _ = try await webView.evaluateJavaScript("""
+        window.postMessage({
+            "version": \(Self.interFrameMessageProtocol),
+            "command": "\(command.rawValue)"
+        });
+        """)
+    }
+    
     private func makeDownloadedFile(fileName: String, data: Data) throws -> FileWithTemporaryDirectory {
         let safeFileName = URL(fileURLWithPath: fileName).lastPathComponent
         guard
@@ -387,6 +401,12 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
             print(error)
         }
     }
+    
+    private func finishClosing() async {
+        webView.stopLoading()
+        await websiteDataStore.cleanUp()
+        dismiss(animated: true)
+    }
 
     @IBAction func urlTextFieldDidEndOnExit(
         _ sender: UITextField
@@ -416,12 +436,24 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
         isClosing = true
         closeButton.isEnabled = false
         
+        guard isGracefulShutdownEnabled else {
+            Task { @MainActor [weak self] in
+                await self?.finishClosing()
+            }
+            return
+        }
+        
         Task { @MainActor [weak self] in
-            guard let self else { return }
-            
-            self.webView.stopLoading()
-            await self.websiteDataStore.cleanUp()
-            self.dismiss(animated: true)
+            guard let self else {
+                return
+            }
+            do {
+                try await self.sendCommand(.willUnmount)
+            } catch {
+                print(error)
+                self.isClosing = false
+                self.closeButton.isEnabled = true
+            }
         }
     }
 }
@@ -575,6 +607,7 @@ extension ContentPageViewController: WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        isGracefulShutdownEnabled = false
         updateURLTextFieldDisplay()
     }
 }
@@ -670,7 +703,7 @@ extension ContentPageViewController: UIContextMenuInteractionDelegate {
         return UIContextMenuConfiguration(
             identifier: nil,
             previewProvider: nil
-        ) { _ in
+        ) { [weak self] _ in
             let copyAction = UIAction(
                 title: "URLをコピー",
                 image: UIImage(systemName: "doc.on.doc")
@@ -680,7 +713,7 @@ extension ContentPageViewController: UIContextMenuInteractionDelegate {
             let shareAction = UIAction(
                 title: "共有",
                 image: UIImage(systemName: "square.and.arrow.up")
-            ) { [weak self] _ in
+            ) { _ in
                 self?.presentShareSheet(url)
             }
             let safariAction = UIAction(
@@ -748,8 +781,29 @@ extension ContentPageViewController:
             }
         case .downloadFile:
             handleDownloadFileMessage(body)
-        case .ready,
-             .handshakeResponse:
+        case .ready:
+            isGracefulShutdownEnabled = true
+        case .uploadCompleted:
+            guard isClosing else {
+                return
+            }
+            
+            let failed = body["failed"] as? Bool ?? false
+            
+            if failed {
+                print("Upload failed")
+                isClosing = false
+                closeButton.isEnabled = true
+                return
+            }
+            
+            Task { @MainActor [weak self] in
+                guard let self else {
+                    return
+                }
+                await self.finishClosing()
+            }
+        case .willUnmount, .handshakeResponse:
             break
         }
     }
