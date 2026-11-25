@@ -36,11 +36,14 @@ class ContentPageViewController: UIViewController, UITextFieldDelegate {
     // WKScriptMessageHandlerの名前は送信側で使用している名前に合わせて変更してください
     private static let customMessageHandlerName = "appMessageHandler"
     private static let interFrameMessageProtocol = 1
+    private var isGracefulShutdownEnabled = false
     
     private enum ScriptCommand: String {
         case handshakeRequest = "handshake-request"
         case handshakeResponse = "handshake-response"
         case ready = "ready"
+        case willUnmount = "will-unmount"
+        case uploadCompleted = "upload-completed"
         case downloadFile = "download-file"
     }
     
@@ -748,8 +751,29 @@ extension ContentPageViewController:
             }
         case .downloadFile:
             handleDownloadFileMessage(body)
-        case .ready,
-             .handshakeResponse:
+        case .ready:
+            isGracefulShutdownEnabled = true
+        case .uploadCompleted:
+            guard isClosing else {
+                return
+            }
+            
+            let failed = body["failed"] as? Bool ?? false
+            
+            if failed {
+                print("Upload failed")
+                isClosing = false
+                closeButton.isEnabled = true
+                return
+            }
+            
+            Task { @MainActor [weak self] in
+                guard let self else {
+                    return
+                }
+//                await self.finishClosing()
+            }
+        case .willUnmount, .handshakeResponse:
             break
         }
     }
