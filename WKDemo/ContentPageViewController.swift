@@ -607,6 +607,7 @@ extension ContentPageViewController: WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        isGracefulShutdownEnabled = false
         updateURLTextFieldDisplay()
     }
 }
